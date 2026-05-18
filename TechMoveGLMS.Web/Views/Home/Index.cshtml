@@ -6,10 +6,10 @@
 <!-- Page Header -->
 <div class="d-flex justify-content-between align-items-center mb-4">
     <div>
-        <h1 class="display-5 fw-bold mb-1" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); -webkit-background-clip: text; background-clip: text; color: transparent;">
-            <i class="bi bi-speedometer2"></i> Dashboard
+        <h1 class="display-5 fw-bold mb-1">
+            <i class="bi bi-speedometer2 text-primary"></i> Dashboard
         </h1>
-        <p class="text-muted">Welcome back! Here's what's happening with your logistics operations today.</p>
+        <p class="text-muted">Welcome back. Your logistics operations at a glance.</p>
     </div>
     <div class="d-none d-md-block">
         <div class="dropdown">
@@ -26,90 +26,62 @@
     </div>
 </div>
 
-<!-- KPI Cards with Modern Design -->
+<!-- KPI Cards -->
 <div class="row g-4 mb-5">
     <div class="col-md-3 col-6">
-        <div class="stat-card" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
-            <div class="d-flex justify-content-between align-items-start">
-                <div>
-                    <div class="fs-1 fw-bold mb-2">@ViewBag.TotalClients</div>
-                    <div class="text-white-50">Total Clients</div>
-                </div>
-                <i class="bi bi-people-fill fs-1 opacity-50"></i>
-            </div>
-            <div class="mt-3">
-                <small class="text-white-50">
-                    <i class="bi bi-arrow-up-short"></i> +12% from last month
-                </small>
+        <div class="stat-card">
+            <div class="stat-value">@ViewBag.TotalClients</div>
+            <div class="stat-label">Total Clients</div>
+            <div class="stat-icon"><i class="bi bi-people-fill"></i></div>
+            <div class="mt-2">
+                <small class="text-muted"><i class="bi bi-arrow-up-short text-success"></i> +12% vs last month</small>
             </div>
             <a asp-controller="Clients" asp-action="Index" class="stretched-link"></a>
         </div>
     </div>
     <div class="col-md-3 col-6">
-        <div class="stat-card" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
-            <div class="d-flex justify-content-between align-items-start">
-                <div>
-                    <div class="fs-1 fw-bold mb-2">@ViewBag.ActiveContracts</div>
-                    <div class="text-white-50">Active Contracts</div>
-                </div>
-                <i class="bi bi-file-earmark-check-fill fs-1 opacity-50"></i>
+        <div class="stat-card">
+            <div class="stat-value">@ViewBag.ActiveContracts</div>
+            <div class="stat-label">Active Contracts</div>
+            <div class="stat-icon"><i class="bi bi-file-earmark-check-fill"></i></div>
+            <div class="mt-2">
+                <small class="text-muted"><i class="bi bi-check-circle"></i> @ViewBag.TotalContracts Total</small>
             </div>
-            <div class="mt-3">
-                <small class="text-white-50">
-                    <i class="bi bi-check-circle"></i> @ViewBag.TotalContracts Total
-                </small>
-            </div>
-            <a asp-controller="Contracts" asp-action="Index" asp-route-StatusFilter="Active" class="stretched-link"></a>
+            <a asp-controller="Contracts" asp-action="Index" asp-route-statusFilter="Active" class="stretched-link"></a>
         </div>
     </div>
     <div class="col-md-3 col-6">
-        <div class="stat-card" style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);">
-            <div class="d-flex justify-content-between align-items-start">
-                <div>
-                    <div class="fs-1 fw-bold mb-2">@ViewBag.TotalContracts</div>
-                    <div class="text-white-50">Total Contracts</div>
-                </div>
-                <i class="bi bi-file-earmark-text-fill fs-1 opacity-50"></i>
-            </div>
-            <div class="mt-3">
-                <small class="text-white-50">
-                    <i class="bi bi-calendar"></i> Lifetime value
-                </small>
+        <div class="stat-card">
+            <div class="stat-value">@ViewBag.TotalContracts</div>
+            <div class="stat-label">Total Contracts</div>
+            <div class="stat-icon"><i class="bi bi-file-earmark-text-fill"></i></div>
+            <div class="mt-2">
+                <small class="text-muted"><i class="bi bi-calendar"></i> Lifetime value</small>
             </div>
             <a asp-controller="Contracts" asp-action="Index" class="stretched-link"></a>
         </div>
     </div>
     <div class="col-md-3 col-6">
-        <div class="stat-card" style="background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%); color: #2c3e50;">
-            <div class="d-flex justify-content-between align-items-start">
-                <div>
-                    <div class="fs-1 fw-bold mb-2">@ViewBag.PendingRequests</div>
-                    <div class="opacity-75">Pending Requests</div>
-                </div>
-                <i class="bi bi-clock-history fs-1 opacity-50"></i>
-            </div>
-            <div class="mt-3">
-                <small class="opacity-75">
-                    <i class="bi bi-exclamation-triangle"></i> Needs attention
-                </small>
+        <div class="stat-card">
+            <div class="stat-value">@ViewBag.PendingRequests</div>
+            <div class="stat-label">Pending Requests</div>
+            <div class="stat-icon"><i class="bi bi-clock-history"></i></div>
+            <div class="mt-2">
+                <small class="text-muted"><i class="bi bi-exclamation-triangle"></i> Needs attention</small>
             </div>
             <a asp-controller="ServiceRequests" asp-action="Index" class="stretched-link"></a>
         </div>
     </div>
 </div>
 
-<!-- Recent Activity Section -->
+<!-- Recent Activity -->
 <div class="row g-4 mb-5">
-    <!-- Recent Contracts -->
     <div class="col-lg-8">
         <div class="card-modern">
-            <div class="card-header bg-transparent border-0 d-flex justify-content-between align-items-center p-4">
+            <div class="card-header d-flex justify-content-between align-items-center">
                 <div>
-                    <h5 class="mb-0 fw-bold">
-                        <i class="bi bi-file-earmark-text me-2" style="color: #667eea;"></i>
-                        Recent Contracts
-                    </h5>
-                    <small class="text-muted">Latest 5 contracts added to the system</small>
+                    <h5 class="mb-0 fw-bold"><i class="bi bi-file-earmark-text me-2 text-primary"></i> Recent Contracts</h5>
+                    <small class="text-muted">Latest 5 contracts added</small>
                 </div>
                 <a asp-controller="Contracts" asp-action="Create" class="btn btn-primary btn-sm rounded-pill px-3">
                     <i class="bi bi-plus-circle"></i> New Contract
@@ -118,7 +90,7 @@
             <div class="card-body p-0">
                 <div class="table-responsive">
                     <table class="table table-hover align-middle mb-0">
-                        <thead style="background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);">
+                        <thead>
                             <tr>
                                 <th class="ps-4">Client</th>
                                 <th>Service Level</th>
@@ -134,17 +106,11 @@
                                 <tr>
                                     <td class="ps-4">
                                         <div class="d-flex align-items-center">
-                                            <div class="avatar-sm bg-primary bg-opacity-10 rounded-circle me-2" style="width: 32px; height: 32px; display: flex; align-items: center; justify-content: center;">
-                                                <i class="bi bi-person text-primary"></i>
-                                            </div>
+                                            <div class="avatar-sm me-2"><i class="bi bi-person text-primary"></i></div>
                                             <strong>@c.Client?.Name</strong>
                                         </div>
                                     </td>
-                                    <td>
-                                        <span class="badge bg-light text-dark rounded-pill px-3 py-2">
-                                            @c.ServiceLevel
-                                        </span>
-                                    </td>
+                                    <td><span class="badge bg-secondary bg-opacity-10 text-light">@c.ServiceLevel</span></td>
                                     <td>@c.StartDate.ToString("dd MMM yyyy")</td>
                                     <td>@c.EndDate.ToString("dd MMM yyyy")</td>
                                     <td>
@@ -163,10 +129,7 @@
                                         </span>
                                     </td>
                                     <td class="text-end pe-4">
-                                        <a asp-controller="Contracts" asp-action="Details" asp-route-id="@c.Id"
-                                           class="btn btn-sm btn-outline-primary rounded-pill px-3">
-                                            <i class="bi bi-eye"></i> View
-                                        </a>
+                                        <a asp-controller="Contracts" asp-action="Details" asp-route-id="@c.Id" class="btn btn-sm btn-outline-primary rounded-pill px-3"><i class="bi bi-eye"></i> View</a>
                                     </td>
                                 </tr>
                             }
@@ -175,10 +138,7 @@
                                 <tr>
                                     <td colspan="6" class="text-center py-5">
                                         <i class="bi bi-inbox fs-1 text-muted"></i>
-                                        <p class="text-muted mt-2">No contracts yet. Create your first contract!</p>
-                                        <a asp-controller="Contracts" asp-action="Create" class="btn btn-primary btn-sm">
-                                            <i class="bi bi-plus-circle"></i> Create Contract
-                                        </a>
+                                        <p class="mt-2">No contracts yet. <a asp-controller="Contracts" asp-action="Create">Create one</a></p>
                                     </td>
                                 </tr>
                             }
@@ -188,184 +148,67 @@
             </div>
             @if (Model.Any())
             {
-                <div class="card-footer bg-transparent border-0 text-center p-3">
-                    <a asp-controller="Contracts" asp-action="Index" class="text-decoration-none">
-                        View All Contracts <i class="bi bi-arrow-right"></i>
-                    </a>
+                <div class="card-footer text-center">
+                    <a asp-controller="Contracts" asp-action="Index" class="text-decoration-none">View All Contracts <i class="bi bi-arrow-right"></i></a>
                 </div>
             }
         </div>
     </div>
 
-    <!-- Right Sidebar - Quick Actions & Stats -->
     <div class="col-lg-4">
         <!-- Quick Actions -->
         <div class="card-modern mb-4">
-            <div class="card-header bg-transparent border-0 p-4 pb-0">
-                <h5 class="fw-bold mb-0">
-                    <i class="bi bi-lightning-charge me-2" style="color: #f093fb;"></i>
-                    Quick Actions
-                </h5>
-            </div>
-            <div class="card-body p-4 pt-3">
+            <div class="card-header"><h5 class="fw-bold mb-0"><i class="bi bi-lightning-charge me-2 text-secondary"></i> Quick Actions</h5></div>
+            <div class="card-body">
                 <div class="d-grid gap-2">
-                    <a asp-controller="Clients" asp-action="Create" class="btn btn-outline-primary rounded-pill py-2 text-start px-3">
-                        <i class="bi bi-person-plus"></i> Add New Client
-                    </a>
-                    <a asp-controller="Contracts" asp-action="Create" class="btn btn-outline-success rounded-pill py-2 text-start px-3">
-                        <i class="bi bi-file-earmark-plus"></i> Create Contract
-                    </a>
-                    <a asp-controller="ServiceRequests" asp-action="Create" class="btn btn-outline-warning rounded-pill py-2 text-start px-3">
-                        <i class="bi bi-plus-circle"></i> New Service Request
-                    </a>
+                    <a asp-controller="Clients" asp-action="Create" class="btn btn-outline-primary text-start px-3"><i class="bi bi-person-plus"></i> Add New Client</a>
+                    <a asp-controller="Contracts" asp-action="Create" class="btn btn-outline-success text-start px-3"><i class="bi bi-file-earmark-plus"></i> Create Contract</a>
+                    <a asp-controller="ServiceRequests" asp-action="Create" class="btn btn-outline-warning text-start px-3"><i class="bi bi-plus-circle"></i> New Service Request</a>
                 </div>
             </div>
         </div>
 
         <!-- Upcoming Expirations -->
         <div class="card-modern mb-4">
-            <div class="card-header bg-transparent border-0 p-4 pb-0">
-                <h5 class="fw-bold mb-0">
-                    <i class="bi bi-calendar-exclamation me-2" style="color: #fa709a;"></i>
-                    Upcoming Expirations
-                </h5>
-            </div>
-            <div class="card-body p-4">
+            <div class="card-header"><h5 class="fw-bold mb-0"><i class="bi bi-calendar-exclamation me-2 text-danger"></i> Upcoming Expirations</h5></div>
+            <div class="card-body">
                 @{
-                    var expiringContracts = Model.Where(c => c.EndDate <= DateTime.Now.AddDays(30) && c.Status == ContractStatus.Active).Take(3);
+                    var expiring = Model.Where(c => c.EndDate <= DateTime.Now.AddDays(30) && c.Status == ContractStatus.Active).Take(3);
                 }
-                @foreach (var contract in expiringContracts)
+                @foreach (var contract in expiring)
                 {
-                    <div class="d-flex justify-content-between align-items-center mb-3 pb-2 border-bottom">
-                        <div>
-                            <strong>@contract.Client?.Name</strong>
-                            <div>
-                                <small class="text-muted">Expires in @((contract.EndDate - DateTime.Now).Days) days</small>
-                            </div>
-                        </div>
-                        <span class="badge bg-warning bg-opacity-10 text-warning rounded-pill">
-                            @contract.EndDate.ToString("dd MMM")
-                        </span>
+                    <div class="d-flex justify-content-between align-items-center mb-3 pb-2 border-bottom border-secondary">
+                        <div><strong>@contract.Client?.Name</strong><div><small class="text-muted">Expires in @((contract.EndDate - DateTime.Now).Days) days</small></div></div>
+                        <span class="badge bg-warning bg-opacity-10 text-warning">@contract.EndDate.ToString("dd MMM")</span>
                     </div>
                 }
-                @if (!expiringContracts.Any())
+                @if (!expiring.Any())
                 {
-                    <div class="text-center text-muted py-3">
-                        <i class="bi bi-calendar-check fs-1"></i>
-                        <p class="mt-2 mb-0">No contracts expiring soon</p>
-                    </div>
+                    <div class="text-center py-3"><i class="bi bi-calendar-check fs-1 text-muted"></i><p class="mt-2">No contracts expiring soon</p></div>
                 }
             </div>
         </div>
 
         <!-- System Health -->
         <div class="card-modern">
-            <div class="card-header bg-transparent border-0 p-4 pb-0">
-                <h5 class="fw-bold mb-0">
-                    <i class="bi bi-heart-pulse me-2" style="color: #a8edea;"></i>
-                    System Health
-                </h5>
-            </div>
-            <div class="card-body p-4">
-                <div class="mb-3">
-                    <div class="d-flex justify-content-between mb-1">
-                        <small>Storage Usage</small>
-                        <small class="text-primary">64%</small>
-                    </div>
-                    <div class="progress" style="height: 8px;">
-                        <div class="progress-bar bg-primary" style="width: 64%"></div>
-                    </div>
-                </div>
-                <div class="mb-3">
-                    <div class="d-flex justify-content-between mb-1">
-                        <small>API Response Time</small>
-                        <small class="text-success">124ms</small>
-                    </div>
-                    <div class="progress" style="height: 8px;">
-                        <div class="progress-bar bg-success" style="width: 32%"></div>
-                    </div>
-                </div>
-                <div class="mb-0">
-                    <div class="d-flex justify-content-between mb-1">
-                        <small>Active Sessions</small>
-                        <small class="text-info">3</small>
-                    </div>
-                    <div class="progress" style="height: 8px;">
-                        <div class="progress-bar bg-info" style="width: 15%"></div>
-                    </div>
-                </div>
+            <div class="card-header"><h5 class="fw-bold mb-0"><i class="bi bi-heart-pulse me-2 text-info"></i> System Health</h5></div>
+            <div class="card-body">
+                <div class="mb-3"><div class="d-flex justify-content-between"><small>Storage</small><small>64%</small></div><div class="progress"><div class="progress-bar" style="width:64%"></div></div></div>
+                <div class="mb-3"><div class="d-flex justify-content-between"><small>API Response</small><small>124ms</small></div><div class="progress"><div class="progress-bar bg-success" style="width:32%"></div></div></div>
+                <div><div class="d-flex justify-content-between"><small>Active Sessions</small><small>3</small></div><div class="progress"><div class="progress-bar bg-info" style="width:15%"></div></div></div>
             </div>
         </div>
     </div>
 </div>
 
-<!-- Additional Styles -->
 <style>
     .avatar-sm {
-        width: 32px;
-        height: 32px;
-        display: flex;
+        width: 28px;
+        height: 28px;
+        display: inline-flex;
         align-items: center;
         justify-content: center;
-        background: rgba(102, 126, 234, 0.1);
-        border-radius: 50%;
+        background: rgba(16,185,129,0.2);
+        border-radius: 0.5rem;
     }
-
-    .stat-card {
-        border-radius: 20px;
-        padding: 1.5rem;
-        color: white;
-        transition: all 0.3s ease;
-        position: relative;
-        overflow: hidden;
-    }
-
-        .stat-card::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            right: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 70%);
-            transform: rotate(45deg);
-            transition: all 0.5s ease;
-        }
-
-        .stat-card:hover::before {
-            transform: rotate(45deg) scale(1.5);
-        }
-
-        .stat-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
-        }
-
-    .card-modern {
-        background: rgba(255, 255, 255, 0.95);
-        backdrop-filter: blur(10px);
-        border: none;
-        border-radius: 20px;
-        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.05);
-        transition: all 0.3s ease;
-    }
-
-        .card-modern:hover {
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.1);
-        }
-
-    .btn-glass {
-        background: rgba(255, 255, 255, 0.9);
-        backdrop-filter: blur(10px);
-        border: 1px solid rgba(0, 0, 0, 0.1);
-        border-radius: 12px;
-        padding: 0.5rem 1rem;
-        transition: all 0.3s ease;
-    }
-
-        .btn-glass:hover {
-            background: white;
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-        }
 </style>
