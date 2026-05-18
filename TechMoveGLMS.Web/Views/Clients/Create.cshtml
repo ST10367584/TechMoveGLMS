@@ -1,0 +1,520 @@
+﻿@model Client
+@{
+    ViewData["Title"] = "Add Client";
+}
+
+<!-- Page Header -->
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h1 class="display-5 fw-bold mb-1" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); -webkit-background-clip: text; background-clip: text; color: transparent;">
+            <i class="bi bi-person-plus-fill"></i> Add New Client
+        </h1>
+        <p class="text-muted">Create a new client profile to start managing contracts and service requests</p>
+    </div>
+    <div>
+        <a asp-action="Index" class="btn btn-outline-secondary rounded-pill px-4">
+            <i class="bi bi-arrow-left"></i> Back to Clients
+        </a>
+    </div>
+</div>
+
+<div class="row g-4">
+    <!-- Main Form Column -->
+    <div class="col-lg-7">
+        <div class="card-modern">
+            <div class="card-header bg-transparent border-0 p-4 pb-0">
+                <div class="d-flex align-items-center">
+                    <div class="avatar-lg me-3" style="background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);">
+                        <i class="bi bi-building fs-3" style="color: #667eea;"></i>
+                    </div>
+                    <div>
+                        <h5 class="fw-bold mb-0">Client Information</h5>
+                        <small class="text-muted">Enter the client's basic details and contact information</small>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-body p-4">
+                <form asp-action="Create" method="post" id="createClientForm">
+                    <div asp-validation-summary="ModelOnly" class="alert alert-modern alert-danger" role="alert"></div>
+
+                    <!-- Client Name -->
+                    <div class="mb-4">
+                        <label asp-for="Name" class="form-label fw-semibold mb-2">
+                            <i class="bi bi-building text-primary"></i> Client Name <span class="text-danger">*</span>
+                        </label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-transparent border-end-0">
+                                <i class="bi bi-building"></i>
+                            </span>
+                            <input asp-for="Name" class="form-control border-start-0 ps-0"
+                                   placeholder="e.g., Acme Imports (Pty) Ltd" />
+                        </div>
+                        <span asp-validation-for="Name" class="text-danger small mt-1 d-block"></span>
+                        <small class="text-muted mt-1 d-block">
+                            <i class="bi bi-info-circle"></i> Full legal name of the company or individual
+                        </small>
+                    </div>
+
+                    <!-- Contact Person -->
+                    <div class="mb-4">
+                        <label asp-for="ContactPerson" class="form-label fw-semibold mb-2">
+                            <i class="bi bi-person-badge text-info"></i> Contact Person
+                        </label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-transparent border-end-0">
+                                <i class="bi bi-person"></i>
+                            </span>
+                            <input asp-for="ContactPerson" class="form-control border-start-0 ps-0"
+                                   placeholder="e.g., Jane Doe" />
+                        </div>
+                        <span asp-validation-for="ContactPerson" class="text-danger small mt-1 d-block"></span>
+                        <small class="text-muted mt-1 d-block">
+                            <i class="bi bi-info-circle"></i> Primary point of contact for this client
+                        </small>
+                    </div>
+
+                    <!-- Email & Phone Row -->
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-6">
+                            <label asp-for="Email" class="form-label fw-semibold mb-2">
+                                <i class="bi bi-envelope text-success"></i> Email Address <span class="text-danger">*</span>
+                            </label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-transparent border-end-0">
+                                    <i class="bi bi-envelope"></i>
+                                </span>
+                                <input asp-for="Email" class="form-control border-start-0 ps-0"
+                                       type="email" placeholder="client@company.com" />
+                            </div>
+                            <span asp-validation-for="Email" class="text-danger small mt-1 d-block"></span>
+                        </div>
+                        <div class="col-md-6">
+                            <label asp-for="Phone" class="form-label fw-semibold mb-2">
+                                <i class="bi bi-telephone text-warning"></i> Phone Number
+                            </label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-transparent border-end-0">
+                                    <i class="bi bi-telephone"></i>
+                                </span>
+                                <input asp-for="Phone" class="form-control border-start-0 ps-0"
+                                       placeholder="+27 11 123 4567" />
+                            </div>
+                            <span asp-validation-for="Phone" class="text-danger small mt-1 d-block"></span>
+                        </div>
+                    </div>
+
+                    <!-- Region Selection -->
+                    <div class="mb-4">
+                        <label asp-for="Region" class="form-label fw-semibold mb-2">
+                            <i class="bi bi-geo-alt text-danger"></i> Region <span class="text-danger">*</span>
+                        </label>
+                        <select asp-for="Region" class="form-select region-select">
+                            <option value="">-- Select a region --</option>
+                            <optgroup label="South Africa">
+                                <option value="Gauteng">🏙️ Gauteng</option>
+                                <option value="Western Cape">🌊 Western Cape</option>
+                                <option value="KwaZulu-Natal">🏖️ KwaZulu-Natal</option>
+                                <option value="Eastern Cape">🌄 Eastern Cape</option>
+                                <option value="Free State">🌾 Free State</option>
+                                <option value="Limpopo">🦁 Limpopo</option>
+                                <option value="Mpumalanga">⛰️ Mpumalanga</option>
+                                <option value="North West">🏜️ North West</option>
+                                <option value="Northern Cape">🌵 Northern Cape</option>
+                            </optgroup>
+                            <optgroup label="International">
+                                <option value="International">🌍 International</option>
+                            </optgroup>
+                        </select>
+                        <span asp-validation-for="Region" class="text-danger small mt-1 d-block"></span>
+                        <small class="text-muted mt-1 d-block">
+                            <i class="bi bi-info-circle"></i> Primary service region for logistics operations
+                        </small>
+                    </div>
+
+                    <!-- Address -->
+                    <div class="mb-4">
+                        <label asp-for="Address" class="form-label fw-semibold mb-2">
+                            <i class="bi bi-geo-alt-fill text-secondary"></i> Physical Address
+                        </label>
+                        <textarea asp-for="Address" class="form-control address-textarea" rows="3"
+                                  placeholder="Street address, city, postal code..."></textarea>
+                        <small class="text-muted mt-1 d-block">
+                            <i class="bi bi-info-circle"></i> Full physical address for deliveries and correspondence
+                        </small>
+                    </div>
+
+                    <!-- Form Actions -->
+                    <div class="d-flex gap-3 mt-4 pt-3 border-top">
+                        <button type="submit" class="btn btn-gradient-primary rounded-pill px-5 py-2">
+                            <i class="bi bi-floppy"></i> Create Client
+                        </button>
+                        <button type="reset" class="btn btn-outline-secondary rounded-pill px-4 py-2" onclick="resetForm()">
+                            <i class="bi bi-arrow-counterclockwise"></i> Reset
+                        </button>
+                        <a asp-action="Index" class="btn btn-link text-secondary ms-auto">
+                            <i class="bi bi-x-circle"></i> Cancel
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Right Column - Tips & Information -->
+    <div class="col-lg-5">
+        <!-- Quick Tips Card -->
+        <div class="card-modern mb-4">
+            <div class="card-header bg-transparent border-0 p-4 pb-0">
+                <h5 class="fw-bold mb-0">
+                    <i class="bi bi-lightbulb text-warning"></i> Quick Tips
+                </h5>
+            </div>
+            <div class="card-body p-4">
+                <div class="tip-item mb-3 pb-2 border-bottom">
+                    <div class="d-flex">
+                        <div class="tip-icon me-3">
+                            <i class="bi bi-check-circle-fill text-success"></i>
+                        </div>
+                        <div>
+                            <strong>Required Fields</strong>
+                            <p class="mb-0 small text-muted">Fields marked with <span class="text-danger">*</span> are required</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="tip-item mb-3 pb-2 border-bottom">
+                    <div class="d-flex">
+                        <div class="tip-icon me-3">
+                            <i class="bi bi-envelope-check-fill text-info"></i>
+                        </div>
+                        <div>
+                            <strong>Valid Email Required</strong>
+                            <p class="mb-0 small text-muted">Ensure email is valid for system notifications</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="tip-item mb-3 pb-2 border-bottom">
+                    <div class="d-flex">
+                        <div class="tip-icon me-3">
+                            <i class="bi bi-phone-fill text-primary"></i>
+                        </div>
+                        <div>
+                            <strong>Phone Format</strong>
+                            <p class="mb-0 small text-muted">Include country code for international numbers</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="tip-item">
+                    <div class="d-flex">
+                        <div class="tip-icon me-3">
+                            <i class="bi bi-geo-alt-fill text-danger"></i>
+                        </div>
+                        <div>
+                            <strong>Region Selection</strong>
+                            <p class="mb-0 small text-muted">Choose the correct region for accurate service delivery</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Benefits Card -->
+        <div class="card-modern">
+            <div class="card-header bg-transparent border-0 p-4 pb-0">
+                <h5 class="fw-bold mb-0">
+                    <i class="bi bi-star-fill text-warning"></i> Why Add a Client?
+                </h5>
+            </div>
+            <div class="card-body p-4">
+                <div class="benefit-item mb-3">
+                    <i class="bi bi-file-earmark-text me-2 text-primary"></i>
+                    Create and manage contracts
+                </div>
+                <div class="benefit-item mb-3">
+                    <i class="bi bi-list-check me-2 text-success"></i>
+                    Track service requests
+                </div>
+                <div class="benefit-item mb-3">
+                    <i class="bi bi-graph-up me-2 text-info"></i>
+                    Monitor client performance
+                </div>
+                <div class="benefit-item mb-3">
+                    <i class="bi bi-envelope-paper me-2 text-warning"></i>
+                    Receive important notifications
+                </div>
+                <div class="benefit-item">
+                    <i class="bi bi-bar-chart me-2 text-danger"></i>
+                    Generate detailed reports
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Success Preview (Shown after successful creation) -->
+<div class="toast-container position-fixed bottom-0 end-0 p-3">
+    <div id="successToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-bs-autohide="true" data-bs-delay="3000">
+        <div class="toast-header bg-success text-white">
+            <i class="bi bi-check-circle-fill me-2"></i>
+            <strong class="me-auto">Success</strong>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast"></button>
+        </div>
+        <div class="toast-body">
+            Client created successfully!
+        </div>
+    </div>
+</div>
+
+<!-- Custom CSS -->
+<style>
+    .card-modern {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        border: none;
+        border-radius: 20px;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.05);
+        transition: all 0.3s ease;
+    }
+
+        .card-modern:hover {
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.1);
+        }
+
+    .avatar-lg {
+        width: 50px;
+        height: 50px;
+        border-radius: 15px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .input-group-text {
+        background: transparent;
+        color: #667eea;
+        transition: all 0.3s ease;
+    }
+
+    .form-control, .form-select {
+        border: 1px solid #e0e0e0;
+        padding: 0.6rem 1rem;
+        transition: all 0.3s ease;
+        font-size: 0.95rem;
+    }
+
+        .form-control:focus, .form-select:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+        }
+
+    .address-textarea {
+        resize: vertical;
+        min-height: 80px;
+    }
+
+    .btn-gradient-primary {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border: none;
+        color: white;
+        transition: all 0.3s ease;
+        font-weight: 600;
+    }
+
+        .btn-gradient-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+            color: white;
+        }
+
+        .btn-gradient-primary:active {
+            transform: translateY(0);
+        }
+
+    .alert-modern {
+        border: none;
+        border-radius: 15px;
+        padding: 1rem;
+        animation: slideDown 0.5s ease-out;
+    }
+
+    @@keyframes slideDown {
+        from
+
+    {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    }
+
+    .region-select optgroup {
+        font-weight: bold;
+        color: #667eea;
+    }
+
+    .tip-item:last-child {
+        border-bottom: none !important;
+        padding-bottom: 0 !important;
+        margin-bottom: 0 !important;
+    }
+
+    .tip-icon {
+        width: 24px;
+        flex-shrink: 0;
+    }
+
+    .benefit-item {
+        padding: 0.5rem 0;
+        border-bottom: 1px solid #f0f0f0;
+    }
+
+        .benefit-item:last-child {
+            border-bottom: none;
+        }
+
+    /* Responsive adjustments */
+    @@media (max-width: 768px) {
+        .btn-gradient-primary
+
+    {
+        width: 100%;
+    }
+
+    .btn-outline-secondary {
+        width: 100%;
+    }
+
+    .card-body {
+        padding: 1.25rem;
+    }
+
+    .d-flex.gap-3 {
+        flex-direction: column;
+    }
+
+    .ms-auto {
+        margin-left: 0 !important;
+        text-align: center;
+    }
+
+    }
+
+    /* Loading state */
+    .btn-gradient-primary.loading {
+        opacity: 0.7;
+        cursor: not-allowed;
+    }
+
+        .btn-gradient-primary.loading i {
+            animation: spin 1s linear infinite;
+        }
+
+    @@keyframes spin {
+        from
+
+    {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+
+    }</style>
+
+<!-- JavaScript for Enhanced UX -->
+<script>
+    // Auto-format phone number as user types
+    document.querySelector('input[name="Phone"]')?.addEventListener('input', function(e) {
+        let value = e.target.value.replace(/\D/g, '');
+        if (value.length > 0 && !value.startsWith('27') && value.length === 9) {
+            // Format as local South African number
+            e.target.value = `+27 ${value.slice(0, 2)} ${value.slice(2, 5)} ${value.slice(5, 9)}`;
+        } else if (value.length > 0 && value.startsWith('27')) {
+            // Format international
+            e.target.value = `+${value.slice(0, 2)} ${value.slice(2, 4)} ${value.slice(4, 7)} ${value.slice(7, 11)}`;
+        }
+    });
+
+    // Show loading state on form submit
+    const form = document.getElementById('createClientForm');
+    const submitBtn = document.querySelector('.btn-gradient-primary');
+
+    form.addEventListener('submit', function(e) {
+        if (form.checkValidity()) {
+            submitBtn.classList.add('loading');
+            submitBtn.innerHTML = '<i class="bi bi-hourglass-split"></i> Creating Client...';
+            submitBtn.disabled = true;
+        }
+    });
+
+    // Reset form function
+    function resetForm() {
+        if (confirm('Are you sure you want to reset all form fields?')) {
+            form.reset();
+            // Clear validation messages
+            document.querySelectorAll('.text-danger').forEach(el => el.textContent = '');
+            // Remove any alert messages
+            const alertDiv = document.querySelector('.alert-modern');
+            if (alertDiv) alertDiv.remove();
+        }
+    }
+
+    // Character counter for address (optional)
+    const addressField = document.querySelector('.address-textarea');
+    if (addressField) {
+        const counterDiv = document.createElement('small');
+        counterDiv.className = 'text-muted float-end';
+        counterDiv.style.fontSize = '0.75rem';
+        addressField.parentNode.appendChild(counterDiv);
+
+        function updateCounter() {
+            const length = addressField.value.length;
+            counterDiv.textContent = `${length}/500 characters`;
+            if (length > 500) {
+                counterDiv.classList.add('text-danger');
+                addressField.style.borderColor = '#dc3545';
+            } else {
+                counterDiv.classList.remove('text-danger');
+                addressField.style.borderColor = '';
+            }
+        }
+
+        addressField.addEventListener('input', updateCounter);
+        addressField.setAttribute('maxlength', '500');
+        updateCounter();
+    }
+
+    // Show success toast if redirected from successful creation
+    if (window.location.search.includes('created=true')) {
+        const toastEl = document.getElementById('successToast');
+        const toast = new bootstrap.Toast(toastEl);
+        toast.show();
+    }
+
+    // Auto-capitalize first letter of name fields
+    document.querySelector('input[name="Name"]')?.addEventListener('blur', function(e) {
+        if (this.value) {
+            this.value = this.value.split(' ').map(word =>
+                word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
+            ).join(' ');
+        }
+    });
+
+    document.querySelector('input[name="ContactPerson"]')?.addEventListener('blur', function(e) {
+        if (this.value) {
+            this.value = this.value.split(' ').map(word =>
+                word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
+            ).join(' ');
+        }
+    });
+</script>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

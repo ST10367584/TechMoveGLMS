@@ -1,0 +1,83 @@
+@model ContractCreateViewModel
+@{
+    ViewData["Title"] = $"Edit Contract #{Model.Contract.Id}";
+}
+
+<h2><i class="bi bi-pencil-square text-warning"></i> Edit Contract #@Model.Contract.Id</h2>
+<hr />
+
+<div class="row">
+    <div class="col-md-8">
+        <form asp-action="Edit" asp-route-id="@Model.Contract.Id" method="post" enctype="multipart/form-data">
+            <input type="hidden" asp-for="Contract.Id" />
+            <input type="hidden" asp-for="Contract.CreatedAt" />
+            <input type="hidden" asp-for="Contract.SignedAgreementPath" />
+            <input type="hidden" asp-for="Contract.SignedAgreementFileName" />
+
+            <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+
+            <div class="mb-3">
+                <label class="form-label fw-semibold">Client</label>
+                <select asp-for="Contract.ClientId" class="form-select"
+                        asp-items="@(new SelectList(Model.Clients, "Id", "Name", Model.Contract.ClientId))">
+                </select>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label asp-for="Contract.StartDate" class="form-label fw-semibold"></label>
+                    <input asp-for="Contract.StartDate" class="form-control" type="date" />
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label asp-for="Contract.EndDate" class="form-label fw-semibold"></label>
+                    <input asp-for="Contract.EndDate" class="form-control" type="date" />
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label asp-for="Contract.Status" class="form-label fw-semibold"></label>
+                    <select asp-for="Contract.Status" class="form-select"
+                            asp-items="Html.GetEnumSelectList<ContractStatus>()"></select>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label asp-for="Contract.ServiceLevel" class="form-label fw-semibold"></label>
+                    <select asp-for="Contract.ServiceLevel" class="form-select"
+                            asp-items="Html.GetEnumSelectList<ServiceLevel>()"></select>
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Contract.Notes" class="form-label fw-semibold"></label>
+                <textarea asp-for="Contract.Notes" class="form-control" rows="3"></textarea>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label fw-semibold">
+                    <i class="bi bi-file-earmark-pdf text-danger"></i> Replace Signed Agreement (optional)
+                </label>
+                @if (!string.IsNullOrEmpty(Model.Contract.SignedAgreementFileName))
+                {
+                    <div class="alert alert-info py-2 mb-2">
+                        Current: <strong>@Model.Contract.SignedAgreementFileName</strong>
+                    </div>
+                }
+                <input asp-for="SignedAgreement" type="file" class="form-control" accept=".pdf" />
+                <div class="form-text">Leave blank to keep the existing file. Only .pdf accepted.</div>
+            </div>
+
+            <div class="d-flex gap-2">
+                <button type="submit" class="btn btn-warning">
+                    <i class="bi bi-floppy"></i> Update Contract
+                </button>
+                <a asp-action="Details" asp-route-id="@Model.Contract.Id" class="btn btn-outline-secondary">
+                    Cancel
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

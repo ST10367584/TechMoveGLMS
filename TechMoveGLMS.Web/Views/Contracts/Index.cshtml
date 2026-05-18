@@ -1,0 +1,134 @@
+@model ContractSearchViewModel
+@{
+    ViewData["Title"] = "Contracts";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h2><i class="bi bi-file-earmark-text text-primary"></i> Contracts</h2>
+    <a asp-action="Create" class="btn btn-primary">
+        <i class="bi bi-plus-circle"></i> New Contract
+    </a>
+</div>
+
+<!-- Search / Filter Panel -->
+<div class="card shadow-sm mb-4">
+    <div class="card-header"><i class="bi bi-funnel"></i> Search & Filter</div>
+    <div class="card-body">
+        <form method="get" class="row g-3">
+            <div class="col-md-3">
+                <label class="form-label small fw-semibold">Keyword</label>
+                <input type="text" name="SearchTerm" value="@Model.SearchTerm"
+                       class="form-control form-control-sm" placeholder="Client name or notes..." />
+            </div>
+            <div class="col-md-2">
+                <label class="form-label small fw-semibold">Status</label>
+                <select name="StatusFilter" class="form-select form-select-sm">
+                    <option value="">All Statuses</option>
+                    @foreach (var s in Enum.GetValues<ContractStatus>())
+                    {
+                        <option value="@s" selected="@(Model.StatusFilter == s)">@s</option>
+                    }
+                </select>
+            </div>
+            <div class="col-md-2">
+                <label class="form-label small fw-semibold">Client</label>
+                <select name="ClientFilter" class="form-select form-select-sm">
+                    <option value="">All Clients</option>
+                    @foreach (var c in Model.AllClients)
+                    {
+                        <option value="@c.Id" selected="@(Model.ClientFilter == c.Id)">@c.Name</option>
+                    }
+                </select>
+            </div>
+            <div class="col-md-2">
+                <label class="form-label small fw-semibold">Start Date From</label>
+                <input type="date" name="StartDateFrom" class="form-control form-control-sm"
+                       value="@Model.StartDateFrom?.ToString("yyyy-MM-dd")" />
+            </div>
+            <div class="col-md-2">
+                <label class="form-label small fw-semibold">Start Date To</label>
+                <input type="date" name="StartDateTo" class="form-control form-control-sm"
+                       value="@Model.StartDateTo?.ToString("yyyy-MM-dd")" />
+            </div>
+            <div class="col-md-1 d-flex align-items-end gap-1">
+                <button class="btn btn-primary btn-sm w-100"><i class="bi bi-search"></i></button>
+                <a asp-action="Index" class="btn btn-outline-secondary btn-sm w-100">
+                    <i class="bi bi-x"></i>
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="card shadow-sm">
+    <div class="card-header">
+        <small class="text-muted">@Model.Results.Count result(s)</small>
+    </div>
+    <div class="table-responsive">
+        <table class="table table-hover mb-0">
+            <thead class="table-light">
+                <tr>
+                    <th>#</th>
+                    <th>Client</th>
+                    <th>Service Level</th>
+                    <th>Start Date</th>
+                    <th>End Date</th>
+                    <th>Status</th>
+                    <th>Requests</th>
+                    <th>Agreement</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var c in Model.Results)
+                {
+                    var badge = c.Status switch
+                    {
+                        ContractStatus.Active => "success",
+                        ContractStatus.Draft => "secondary",
+                        ContractStatus.Expired => "danger",
+                        ContractStatus.OnHold => "warning",
+                        _ => "secondary"
+                    };
+                    <tr>
+                        <td>@c.Id</td>
+                        <td>@c.Client?.Name</td>
+                        <td>@c.ServiceLevel</td>
+                        <td>@c.StartDate.ToString("dd MMM yyyy")</td>
+                        <td>@c.EndDate.ToString("dd MMM yyyy")</td>
+                        <td><span class="badge bg-@badge">@c.Status</span></td>
+                        <td>@c.ServiceRequests.Count</td>
+                        <td>
+                            @if (!string.IsNullOrEmpty(c.SignedAgreementPath))
+                            {
+                                <a asp-action="DownloadAgreement" asp-route-id="@c.Id"
+                                   class="btn btn-sm btn-outline-success" title="@c.SignedAgreementFileName">
+                                    <i class="bi bi-file-earmark-pdf"></i> Download
+                                </a>
+                            }
+                            else
+                            {
+                                <span class="text-muted small">None</span>
+                            }
+                        </td>
+                        <td>
+                            <a asp-action="Details" asp-route-id="@c.Id" class="btn btn-sm btn-outline-primary">
+                                <i class="bi bi-eye"></i>
+                            </a>
+                            <a asp-action="Edit" asp-route-id="@c.Id" class="btn btn-sm btn-outline-warning">
+                                <i class="bi bi-pencil"></i>
+                            </a>
+                            <a asp-action="Delete" asp-route-id="@c.Id" class="btn btn-sm btn-outline-danger">
+                                <i class="bi bi-trash"></i>
+                            </a>
+                        </td>
+                    </tr>
+                }
+                @if (!Model.Results.Any())
+                {
+                    <tr><td colspan="9" class="text-center text-muted py-4">No contracts match your filters.</td></tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

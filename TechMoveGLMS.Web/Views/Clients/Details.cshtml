@@ -1,0 +1,529 @@
+@model Client
+@{
+    ViewData["Title"] = Model.Name;
+}
+
+<!-- Page Header -->
+<div class="d-flex justify-content-between align-items-start mb-4 flex-wrap gap-3">
+    <div>
+        <div class="d-flex align-items-center gap-3 mb-2">
+            <div class="client-avatar-large" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                <span class="avatar-initials">
+                    @(string.Join("", Model.Name.Split(' ').Select(n => n[0]).Take(2)).ToUpper())
+                </span>
+            </div>
+            <div>
+                <h1 class="display-5 fw-bold mb-1" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); -webkit-background-clip: text; background-clip: text; color: transparent;">
+                    @Model.Name
+                </h1>
+                <div class="d-flex gap-3">
+                    <span class="badge bg-light text-dark rounded-pill px-3 py-1">
+                        <i class="bi bi-geo-alt"></i> @(Model.Region ?? "No region")
+                    </span>
+                    <span class="badge bg-primary bg-opacity-10 text-primary rounded-pill px-3 py-1">
+                        <i class="bi bi-calendar"></i> Since @Model.CreatedAt.ToString("MMM yyyy")
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="d-flex gap-2">
+        <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-gradient-warning rounded-pill px-4">
+            <i class="bi bi-pencil"></i> Edit Client
+        </a>
+        <a asp-controller="Contracts" asp-action="Create" asp-route-clientId="@Model.Id" class="btn btn-gradient-success rounded-pill px-4">
+            <i class="bi bi-plus-circle"></i> New Contract
+        </a>
+        <a asp-action="Index" class="btn btn-outline-secondary rounded-pill px-4">
+            <i class="bi bi-arrow-left"></i> Back
+        </a>
+    </div>
+</div>
+
+<div class="row g-4">
+    <!-- Left Column - Contact Information -->
+    <div class="col-lg-4">
+        <!-- Contact Details Card -->
+        <div class="card-modern mb-4">
+            <div class="card-header bg-transparent border-0 p-4 pb-0">
+                <h5 class="fw-bold mb-0">
+                    <i class="bi bi-info-circle text-primary"></i> Contact Information
+                </h5>
+            </div>
+            <div class="card-body p-4 pt-3">
+                <div class="contact-item mb-3">
+                    <div class="contact-icon-wrapper bg-primary bg-opacity-10">
+                        <i class="bi bi-person text-primary"></i>
+                    </div>
+                    <div class="contact-details">
+                        <small class="text-muted d-block">Contact Person</small>
+                        <strong class="fs-5">@(Model.ContactPerson ?? "Not specified")</strong>
+                    </div>
+                </div>
+
+                <div class="contact-item mb-3">
+                    <div class="contact-icon-wrapper bg-success bg-opacity-10">
+                        <i class="bi bi-envelope text-success"></i>
+                    </div>
+                    <div class="contact-details">
+                        <small class="text-muted d-block">Email Address</small>
+                        <a href="mailto:@Model.Email" class="text-decoration-none fw-semibold">@Model.Email</a>
+                    </div>
+                </div>
+
+                <div class="contact-item mb-3">
+                    <div class="contact-icon-wrapper bg-warning bg-opacity-10">
+                        <i class="bi bi-telephone text-warning"></i>
+                    </div>
+                    <div class="contact-details">
+                        <small class="text-muted d-block">Phone Number</small>
+                        <strong>@(Model.Phone ?? "Not specified")</strong>
+                    </div>
+                </div>
+
+                <div class="contact-item mb-3">
+                    <div class="contact-icon-wrapper bg-danger bg-opacity-10">
+                        <i class="bi bi-geo-alt text-danger"></i>
+                    </div>
+                    <div class="contact-details">
+                        <small class="text-muted d-block">Region</small>
+                        <strong>@(Model.Region ?? "Not specified")</strong>
+                    </div>
+                </div>
+
+                @if (!string.IsNullOrEmpty(Model.Address))
+                {
+                    <div class="contact-item">
+                        <div class="contact-icon-wrapper bg-info bg-opacity-10">
+                            <i class="bi bi-house-door text-info"></i>
+                        </div>
+                        <div class="contact-details">
+                            <small class="text-muted d-block">Physical Address</small>
+                            <span>@Model.Address</span>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+
+        <!-- Quick Stats Card -->
+        <div class="card-modern">
+            <div class="card-header bg-transparent border-0 p-4 pb-0">
+                <h5 class="fw-bold mb-0">
+                    <i class="bi bi-graph-up text-success"></i> Client Analytics
+                </h5>
+            </div>
+            <div class="card-body p-4">
+                <div class="stat-circle mb-4">
+                    <div class="circle-progress">
+                        <div class="circle-value">
+                            @if (Model.Contracts.Any())
+                            {
+                                var activePercentage = (double)Model.Contracts.Count(c => c.Status == ContractStatus.Active) / Model.Contracts.Count * 100;
+                                <span class="display-4 fw-bold" style="color: #667eea;">@activePercentage.ToString("0")<small class="fs-6">%</small></span>
+                            }
+                            else
+                            {
+                                <span class="display-4 fw-bold text-muted">0<small class="fs-6">%</small></span>
+                            }
+                        </div>
+                        <div class="circle-label">Active Contracts</div>
+                    </div>
+                </div>
+
+                <div class="stats-details">
+                    <div class="d-flex justify-content-between mb-2">
+                        <small class="text-muted">Total Contracts</small>
+                        <strong>@Model.Contracts.Count</strong>
+                    </div>
+                    <div class="d-flex justify-content-between mb-2">
+                        <small class="text-muted">Active Contracts</small>
+                        <strong class="text-success">@Model.Contracts.Count(c => c.Status == ContractStatus.Active)</strong>
+                    </div>
+                    <div class="d-flex justify-content-between mb-2">
+                        <small class="text-muted">Expired Contracts</small>
+                        <strong class="text-danger">@Model.Contracts.Count(c => c.Status == ContractStatus.Expired)</strong>
+                    </div>
+                    <div class="d-flex justify-content-between mb-2">
+                        <small class="text-muted">On Hold</small>
+                        <strong class="text-warning">@Model.Contracts.Count(c => c.Status == ContractStatus.OnHold)</strong>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <small class="text-muted">Draft</small>
+                        <strong class="text-secondary">@Model.Contracts.Count(c => c.Status == ContractStatus.Draft)</strong>
+                    </div>
+                </div>
+
+                <div class="progress mt-3" style="height: 8px;">
+                    @{
+                        var activeCount = Model.Contracts.Count(c => c.Status == ContractStatus.Active);
+                        var activePercent = Model.Contracts.Any() ? (double)activeCount / Model.Contracts.Count * 100 : 0;
+                    }
+                    <div class="progress-bar bg-success" style="width: @activePercent%"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Right Column - Contracts Section -->
+    <div class="col-lg-8">
+        <div class="card-modern">
+            <div class="card-header bg-transparent border-0 p-4 pb-0 d-flex justify-content-between align-items-center flex-wrap gap-2">
+                <div>
+                    <h5 class="fw-bold mb-0">
+                        <i class="bi bi-file-earmark-text text-primary"></i> Contracts
+                    </h5>
+                    <small class="text-muted">All service agreements associated with this client</small>
+                </div>
+                <div class="d-flex gap-2">
+                    <div class="dropdown">
+                        <button class="btn btn-sm btn-outline-secondary rounded-pill dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                            <i class="bi bi-funnel"></i> Filter
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="#" onclick="filterContracts('all')">All Contracts</a></li>
+                            <li><a class="dropdown-item" href="#" onclick="filterContracts('active')">Active Only</a></li>
+                            <li><a class="dropdown-item" href="#" onclick="filterContracts('expired')">Expired Only</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="#" onclick="filterContracts('draft')">Draft</a></li>
+                        </ul>
+                    </div>
+                    <a asp-controller="Contracts" asp-action="Create" asp-route-clientId="@Model.Id" class="btn btn-sm btn-primary rounded-pill">
+                        <i class="bi bi-plus-circle"></i> New Contract
+                    </a>
+                </div>
+            </div>
+
+            <div class="card-body p-0">
+                <div class="contracts-list">
+                    @foreach (var contract in Model.Contracts.OrderByDescending(c => c.CreatedAt))
+                    {
+                        var statusClass = contract.Status switch
+                        {
+                            ContractStatus.Active => "contract-active",
+                            ContractStatus.Expired => "contract-expired",
+                            ContractStatus.OnHold => "contract-hold",
+                            _ => "contract-draft"
+                        };
+
+                        <div class="contract-item @statusClass" data-status="@contract.Status.ToString().ToLower()">
+                            <div class="contract-header">
+                                <div class="d-flex justify-content-between align-items-start mb-2">
+                                    <div>
+                                        <h6 class="fw-bold mb-1">Contract #@contract.Id</h6>
+                                        <span class="badge status-badge @GetStatusBadgeClass(contract.Status)">
+                                            <i class="bi @GetStatusIcon(contract.Status)"></i> @contract.Status
+                                        </span>
+                                    </div>
+                                    <div class="contract-actions">
+                                        <a asp-controller="Contracts" asp-action="Details" asp-route-id="@contract.Id"
+                                           class="btn btn-sm btn-outline-primary rounded-pill">
+                                            <i class="bi bi-eye"></i> View
+                                        </a>
+                                        <a asp-controller="Contracts" asp-action="Edit" asp-route-id="@contract.Id"
+                                           class="btn btn-sm btn-outline-secondary rounded-pill">
+                                            <i class="bi bi-pencil"></i> Edit
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="contract-body">
+                                <div class="row g-3 mb-3">
+                                    <div class="col-md-6">
+                                        <div class="contract-info">
+                                            <small class="text-muted d-block">
+                                                <i class="bi bi-trophy"></i> Service Level
+                                            </small>
+                                            <strong>@contract.ServiceLevel</strong>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="contract-info">
+                                            <small class="text-muted d-block">
+                                                <i class="bi bi-calendar-range"></i> Duration
+                                            </small>
+                                            <strong>@contract.StartDate.ToString("dd MMM yyyy") - @contract.EndDate.ToString("dd MMM yyyy")</strong>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="contract-info">
+                                            <small class="text-muted d-block">
+                                                <i class="bi bi-clock-history"></i> Days Remaining
+                                            </small>
+                                            @if (contract.Status == ContractStatus.Active)
+                                            {
+                                                var daysLeft = (contract.EndDate - DateTime.Now).Days;
+                                                <span class="fw-bold @(daysLeft < 30 ? "text-warning" : "text-success")">
+                                                    @daysLeft days
+                                                </span>
+                                            }
+                                            else
+                                            {
+                                                <span class="text-muted">N/A</span>
+                                            }
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="contract-info">
+                                            <small class="text-muted d-block">
+                                                <i class="bi bi-envelope-paper"></i> Service Requests
+                                            </small>
+                                            <strong>@contract.ServiceRequests.Count requests</strong>
+                                            @if (contract.ServiceRequests.Any())
+                                            {
+                                                <a asp-controller="ServiceRequests" asp-action="Index" asp-route-contractId="@contract.Id"
+                                                   class="small text-decoration-none ms-2">
+                                                    View all <i class="bi bi-arrow-right"></i>
+                                                </a>
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+
+                    @if (!Model.Contracts.Any())
+                    {
+                        <div class="empty-state-contracts text-center py-5">
+                            <i class="bi bi-file-earmark-text fs-1 text-muted"></i>
+                            <h5 class="mt-3">No Contracts Yet</h5>
+                            <p class="text-muted">Get started by creating your first contract for this client.</p>
+                            <a asp-controller="Contracts" asp-action="Create" asp-route-clientId="@Model.Id" class="btn btn-primary rounded-pill mt-2">
+                                <i class="bi bi-plus-circle"></i> Create Contract
+                            </a>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@functions {
+    string GetStatusBadgeClass(ContractStatus status)
+    {
+        return status switch
+        {
+            ContractStatus.Active => "bg-success bg-opacity-10 text-success",
+            ContractStatus.Expired => "bg-danger bg-opacity-10 text-danger",
+            ContractStatus.OnHold => "bg-warning bg-opacity-10 text-warning",
+            _ => "bg-secondary bg-opacity-10 text-secondary"
+        };
+    }
+
+    string GetStatusIcon(ContractStatus status)
+    {
+        return status switch
+        {
+            ContractStatus.Active => "bi-check-circle",
+            ContractStatus.Expired => "bi-x-circle",
+            ContractStatus.OnHold => "bi-pause-circle",
+            _ => "bi-file-earmark"
+        };
+    }
+}
+
+<!-- Filter JavaScript -->
+<script>
+    function filterContracts(status) {
+        const contracts = document.querySelectorAll('.contract-item');
+        contracts.forEach(contract => {
+            if (status === 'all') {
+                contract.style.display = 'block';
+            } else if (contract.dataset.status === status) {
+                contract.style.display = 'block';
+            } else {
+                contract.style.display = 'none';
+            }
+        });
+    }
+</script>
+
+<!-- Custom CSS -->
+<style>
+    .client-avatar-large {
+        width: 70px;
+        height: 70px;
+        border-radius: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .avatar-initials {
+        font-size: 1.75rem;
+        font-weight: bold;
+        color: white;
+    }
+
+    .card-modern {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        border: none;
+        border-radius: 20px;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.05);
+        transition: all 0.3s ease;
+        overflow: hidden;
+    }
+
+        .card-modern:hover {
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.1);
+        }
+
+    .contact-item {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        padding: 0.75rem 0;
+        border-bottom: 1px solid #e9ecef;
+    }
+
+        .contact-item:last-child {
+            border-bottom: none;
+        }
+
+    .contact-icon-wrapper {
+        width: 45px;
+        height: 45px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+    }
+
+    .contact-details {
+        flex: 1;
+    }
+
+    .circle-progress {
+        text-align: center;
+        padding: 1rem;
+    }
+
+    .circle-value {
+        position: relative;
+        margin-bottom: 0.5rem;
+    }
+
+    .circle-label {
+        color: #6c757d;
+        font-size: 0.875rem;
+    }
+
+    .contract-item {
+        background: white;
+        border-radius: 15px;
+        margin: 1rem;
+        padding: 1.25rem;
+        transition: all 0.3s ease;
+        border-left: 4px solid #dee2e6;
+    }
+
+        .contract-item:hover {
+            transform: translateX(5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+
+    .contract-active {
+        border-left-color: #28a745;
+    }
+
+    .contract-expired {
+        border-left-color: #dc3545;
+        opacity: 0.8;
+    }
+
+    .contract-hold {
+        border-left-color: #ffc107;
+    }
+
+    .contract-draft {
+        border-left-color: #6c757d;
+    }
+
+    .status-badge {
+        font-size: 0.75rem;
+        padding: 0.25rem 0.75rem;
+        border-radius: 20px;
+    }
+
+    .contract-actions {
+        display: flex;
+        gap: 0.5rem;
+    }
+
+    .contract-info {
+        background: #f8f9fa;
+        padding: 0.5rem 0.75rem;
+        border-radius: 10px;
+    }
+
+    .btn-gradient-warning {
+        background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        border: none;
+        color: white;
+        transition: all 0.3s ease;
+    }
+
+        .btn-gradient-warning:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(245, 87, 108, 0.3);
+            color: white;
+        }
+
+    .btn-gradient-success {
+        background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        border: none;
+        color: white;
+        transition: all 0.3s ease;
+    }
+
+        .btn-gradient-success:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 242, 254, 0.3);
+            color: white;
+        }
+
+    .empty-state-contracts {
+        padding: 3rem 2rem;
+    }
+
+    /* Responsive */
+    @@media (max-width: 768px) {
+        .client-avatar-large
+
+    {
+        width: 50px;
+        height: 50px;
+    }
+
+    .avatar-initials {
+        font-size: 1.25rem;
+    }
+
+    .contact-item {
+        padding: 0.5rem 0;
+    }
+
+    .contract-actions {
+        flex-direction: column;
+    }
+
+        .contract-actions .btn {
+            width: 100%;
+        }
+
+    .btn-gradient-warning,
+    .btn-gradient-success {
+        padding: 0.375rem 1rem;
+        font-size: 0.875rem;
+    }
+
+    }</style>

@@ -1,0 +1,19 @@
+@model ServiceRequest
+@{ ViewData["Title"] = "Delete Service Request"; }
+
+<h2 class="text-danger"><i class="bi bi-trash"></i> Delete Service Request #@Model.Id</h2>
+<p class="text-muted">This action cannot be undone.</p>
+<hr />
+
+<dl class="row">
+    <dt class="col-sm-4">Contract</dt><dd class="col-sm-8">#@Model.ContractId — @Model.Contract?.Client?.Name</dd>
+    <dt class="col-sm-4">Description</dt><dd class="col-sm-8">@Model.Description</dd>
+    <dt class="col-sm-4">Cost (USD)</dt><dd class="col-sm-8">$@Model.CostUSD.ToString("N2")</dd>
+    <dt class="col-sm-4">Cost (ZAR)</dt><dd class="col-sm-8">R @Model.CostZAR.ToString("N2")</dd>
+    <dt class="col-sm-4">Status</dt><dd class="col-sm-8">@Model.Status</dd>
+</dl>
+
+<form asp-action="Delete" method="post">
+    <button type="submit" class="btn btn-danger"><i class="bi bi-trash"></i> Yes, Delete</button>
+    <a asp-controller="Contracts" asp-action="Details" asp-route-id="@Model.ContractId" class="btn btn-secondary">Cancel</a>
+</form>

@@ -1,0 +1,548 @@
+@model Client
+@{
+    ViewData["Title"] = "Delete Client";
+    var hasContracts = Model.Contracts.Any();
+    var activeContracts = Model.Contracts.Count(c => c.Status == ContractStatus.Active);
+}
+
+<!-- Page Header -->
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h1 class="display-5 fw-bold mb-1" style="background: linear-gradient(135deg, #dc3545 0%, #c82333 100%); -webkit-background-clip: text; background-clip: text; color: transparent;">
+            <i class="bi bi-trash-fill"></i> Delete Client
+        </h1>
+        <p class="text-muted">This action is irreversible. Please review the information carefully.</p>
+    </div>
+    <div>
+        <a asp-action="Index" class="btn btn-outline-secondary rounded-pill px-4">
+            <i class="bi bi-arrow-left"></i> Back to Clients
+        </a>
+    </div>
+</div>
+
+<div class="row g-4">
+    <!-- Main Delete Confirmation Card -->
+    <div class="col-lg-7">
+        <div class="delete-card">
+            <div class="delete-card-header">
+                <div class="delete-icon-wrapper">
+                    <i class="bi bi-exclamation-triangle-fill"></i>
+                </div>
+                <div class="delete-title">
+                    <h3 class="mb-0">Confirm Deletion</h3>
+                    <p class="text-white-50 mb-0">This action cannot be undone</p>
+                </div>
+            </div>
+
+            <div class="delete-card-body">
+                <!-- Client Information Summary -->
+                <div class="client-summary mb-4">
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="client-avatar-delete me-3">
+                            <span class="avatar-initials">
+                                @(string.Join("", Model.Name.Split(' ').Select(n => n[0]).Take(2)).ToUpper())
+                            </span>
+                        </div>
+                        <div>
+                            <h4 class="mb-0">@Model.Name</h4>
+                            <small class="text-muted">Client ID: #@Model.Id</small>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Client Details -->
+                <div class="details-section mb-4">
+                    <h6 class="fw-bold mb-3">
+                        <i class="bi bi-info-circle"></i> Client Information
+                    </h6>
+                    <div class="details-grid">
+                        <div class="detail-item">
+                            <div class="detail-label">
+                                <i class="bi bi-envelope text-secondary"></i> Email
+                            </div>
+                            <div class="detail-value">@Model.Email</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">
+                                <i class="bi bi-person-badge text-secondary"></i> Contact Person
+                            </div>
+                            <div class="detail-value">@(Model.ContactPerson ?? "Not specified")</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">
+                                <i class="bi bi-telephone text-secondary"></i> Phone
+                            </div>
+                            <div class="detail-value">@(Model.Phone ?? "Not specified")</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">
+                                <i class="bi bi-geo-alt text-secondary"></i> Region
+                            </div>
+                            <div class="detail-value">@(Model.Region ?? "Not specified")</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">
+                                <i class="bi bi-calendar text-secondary"></i> Registered
+                            </div>
+                            <div class="detail-value">@Model.CreatedAt.ToString("dd MMM yyyy")</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">
+                                <i class="bi bi-file-earmark-text text-secondary"></i> Total Contracts
+                            </div>
+                            <div class="detail-value">
+                                <span class="badge @(hasContracts ? "bg-warning" : "bg-success")">
+                                    @Model.Contracts.Count contract(s)
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Warning Messages -->
+                @if (hasContracts)
+                {
+                    <div class="warning-alert">
+                        <div class="warning-icon">
+                            <i class="bi bi-exclamation-octagon-fill"></i>
+                        </div>
+                        <div class="warning-content">
+                            <strong>Cannot Delete Client</strong>
+                            <p class="mb-0">
+                                This client has @Model.Contracts.Count active contract(s).
+                                You must delete or reassign all contracts before deleting this client.
+                            </p>
+
+                            @if (activeContracts > 0)
+                            {
+                                <div class="mt-2">
+                                    <span class="badge bg-danger">@activeContracts Active Contracts</span>
+                                    <span class="badge bg-secondary">@(Model.Contracts.Count - activeContracts) Inactive</span>
+                                </div>
+                            }
+
+                            <div class="mt-3">
+                                <a asp-controller="Contracts" asp-action="Index" asp-route-clientId="@Model.Id"
+                                   class="btn btn-sm btn-warning rounded-pill">
+                                    <i class="bi bi-eye"></i> View Contracts
+                                </a>
+                                <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-sm btn-outline-secondary rounded-pill ms-2">
+                                    <i class="bi bi-pencil"></i> Edit Client Instead
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    <div class="info-alert">
+                        <div class="info-icon">
+                            <i class="bi bi-info-circle-fill"></i>
+                        </div>
+                        <div class="info-content">
+                            <strong>No contracts found</strong>
+                            <p class="mb-0">This client has no associated contracts and can be safely deleted.</p>
+                        </div>
+                    </div>
+                }
+
+                <!-- Action Buttons -->
+                <div class="action-buttons mt-4">
+                    <form asp-action="Delete" method="post" id="deleteForm">
+                        @Html.AntiForgeryToken()
+                        <button type="submit" class="btn btn-danger btn-delete" @(hasContracts ? "disabled" : "")>
+                            <i class="bi bi-trash"></i> Permanently Delete Client
+                        </button>
+                        <a asp-action="Index" class="btn btn-outline-secondary btn-cancel">
+                            <i class="bi bi-x-circle"></i> Cancel
+                        </a>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Right Column - Additional Information -->
+    <div class="col-lg-5">
+        <!-- Warning Card -->
+        <div class="card-modern mb-4">
+            <div class="card-header bg-transparent border-0 p-4 pb-0">
+                <h5 class="fw-bold mb-0 text-danger">
+                    <i class="bi bi-shield-exclamation"></i> Important Notice
+                </h5>
+            </div>
+            <div class="card-body p-4">
+                <ul class="warning-list mb-0">
+                    <li class="mb-2">
+                        <i class="bi bi-x-circle-fill text-danger me-2"></i>
+                        Deleted clients cannot be recovered
+                    </li>
+                    <li class="mb-2">
+                        <i class="bi bi-file-earmark-text me-2 text-warning"></i>
+                        All associated data will be permanently removed
+                    </li>
+                    <li class="mb-2">
+                        <i class="bi bi-clock-history me-2 text-info"></i>
+                        This action is logged for audit purposes
+                    </li>
+                    <li>
+                        <i class="bi bi-person-x me-2 text-secondary"></i>
+                        Client will be removed from all reports
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Consequence Preview Card -->
+        <div class="card-modern">
+            <div class="card-header bg-transparent border-0 p-4 pb-0">
+                <h5 class="fw-bold mb-0">
+                    <i class="bi bi-eye-slash"></i> Consequences
+                </h5>
+            </div>
+            <div class="card-body p-4">
+                <div class="consequence-item">
+                    <div class="consequence-icon text-danger">
+                        <i class="bi bi-archive"></i>
+                    </div>
+                    <div class="consequence-text">
+                        <strong>Data Loss</strong>
+                        <small>All client records will be archived permanently</small>
+                    </div>
+                </div>
+                <div class="consequence-item">
+                    <div class="consequence-icon text-warning">
+                        <i class="bi bi-link"></i>
+                    </div>
+                    <div class="consequence-text">
+                        <strong>Broken References</strong>
+                        <small>Any links to this client will become invalid</small>
+                    </div>
+                </div>
+                <div class="consequence-item">
+                    <div class="consequence-icon text-info">
+                        <i class="bi bi-bar-chart"></i>
+                    </div>
+                    <div class="consequence-text">
+                        <strong>Analytics Impact</strong>
+                        <small>Historical reports will exclude this client's data</small>
+                    </div>
+                </div>
+                <div class="consequence-item mb-0">
+                    <div class="consequence-icon text-secondary">
+                        <i class="bi bi-envelope-paper"></i>
+                    </div>
+                    <div class="consequence-text">
+                        <strong>Service Requests</strong>
+                        <small>All open requests will need reassignment</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Confirmation Modal (for double confirmation) -->
+<div class="modal fade" id="confirmDeleteModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 rounded-4">
+            <div class="modal-header border-0 pb-0">
+                <h5 class="modal-title fw-bold text-danger">
+                    <i class="bi bi-exclamation-triangle-fill"></i> Final Confirmation
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body text-center py-4">
+                <div class="mb-3">
+                    <i class="bi bi-trash3-fill text-danger" style="font-size: 4rem;"></i>
+                </div>
+                <h6>Are you absolutely sure?</h6>
+                <p class="text-muted mb-0">
+                    You are about to permanently delete <strong>@Model.Name</strong> and all associated data.
+                    This action cannot be undone.
+                </p>
+            </div>
+            <div class="modal-footer border-0 pt-0 justify-content-center gap-3 pb-4">
+                <button type="button" class="btn btn-outline-secondary rounded-pill px-4" data-bs-dismiss="modal">
+                    No, Cancel
+                </button>
+                <button type="button" class="btn btn-danger rounded-pill px-4" id="confirmDeleteBtn">
+                    <i class="bi bi-check-lg"></i> Yes, Delete Permanently
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Custom CSS -->
+<style>
+    .delete-card {
+        background: white;
+        border-radius: 25px;
+        overflow: hidden;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+    }
+
+    .delete-card-header {
+        background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+        padding: 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    .delete-icon-wrapper {
+        width: 60px;
+        height: 60px;
+        background: rgba(255, 255, 255, 0.2);
+        border-radius: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+        .delete-icon-wrapper i {
+            font-size: 2rem;
+            color: white;
+        }
+
+    .delete-title {
+        color: white;
+    }
+
+    .delete-card-body {
+        padding: 2rem;
+    }
+
+    .client-avatar-delete {
+        width: 60px;
+        height: 60px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border-radius: 15px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .avatar-initials {
+        font-size: 1.5rem;
+        font-weight: bold;
+        color: white;
+    }
+
+    .details-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1rem;
+        background: #f8f9fa;
+        padding: 1rem;
+        border-radius: 15px;
+    }
+
+    .detail-item {
+        padding: 0.5rem;
+    }
+
+    .detail-label {
+        font-size: 0.75rem;
+        color: #6c757d;
+        margin-bottom: 0.25rem;
+    }
+
+    .detail-value {
+        font-weight: 500;
+        color: #2c3e50;
+    }
+
+    .warning-alert {
+        background: linear-gradient(135deg, rgba(220, 53, 69, 0.1) 0%, rgba(200, 35, 51, 0.05) 100%);
+        border-left: 4px solid #dc3545;
+        border-radius: 12px;
+        padding: 1rem;
+        display: flex;
+        gap: 1rem;
+        margin-top: 1rem;
+    }
+
+    .warning-icon {
+        font-size: 1.5rem;
+        color: #dc3545;
+    }
+
+    .warning-content {
+        flex: 1;
+    }
+
+    .info-alert {
+        background: linear-gradient(135deg, rgba(23, 162, 184, 0.1) 0%, rgba(23, 162, 184, 0.05) 100%);
+        border-left: 4px solid #17a2b8;
+        border-radius: 12px;
+        padding: 1rem;
+        display: flex;
+        gap: 1rem;
+        margin-top: 1rem;
+    }
+
+    .info-icon {
+        font-size: 1.5rem;
+        color: #17a2b8;
+    }
+
+    .info-content {
+        flex: 1;
+    }
+
+    .action-buttons {
+        display: flex;
+        gap: 1rem;
+    }
+
+    .btn-delete {
+        flex: 2;
+        padding: 0.75rem;
+        border-radius: 50px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+
+        .btn-delete:not(:disabled):hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(220, 53, 69, 0.3);
+        }
+
+    .btn-cancel {
+        flex: 1;
+        padding: 0.75rem;
+        border-radius: 50px;
+    }
+
+    .card-modern {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        border: none;
+        border-radius: 20px;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.05);
+        transition: all 0.3s ease;
+    }
+
+        .card-modern:hover {
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.1);
+        }
+
+    .warning-list {
+        list-style: none;
+        padding-left: 0;
+    }
+
+        .warning-list li {
+            padding: 0.5rem 0;
+            display: flex;
+            align-items: center;
+        }
+
+    .consequence-item {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        padding: 0.75rem 0;
+        border-bottom: 1px solid #e9ecef;
+    }
+
+        .consequence-item:last-child {
+            border-bottom: none;
+        }
+
+    .consequence-icon {
+        width: 40px;
+        height: 40px;
+        background: #f8f9fa;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.25rem;
+    }
+
+    .consequence-text {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+    }
+
+        .consequence-text small {
+            color: #6c757d;
+            font-size: 0.75rem;
+        }
+
+    /* Responsive */
+    @@media (max-width: 768px) {
+        .delete-card-body
+
+    {
+        padding: 1.25rem;
+    }
+
+    .details-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .action-buttons {
+        flex-direction: column;
+    }
+
+    .btn-delete, .btn-cancel {
+        width: 100%;
+    }
+
+    .delete-icon-wrapper {
+        width: 45px;
+        height: 45px;
+    }
+
+        .delete-icon-wrapper i {
+            font-size: 1.5rem;
+        }
+
+    .client-avatar-delete {
+        width: 45px;
+        height: 45px;
+    }
+
+    .avatar-initials {
+        font-size: 1.1rem;
+    }
+
+    }</style>
+
+<!-- JavaScript for Double Confirmation -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const deleteForm = document.getElementById('deleteForm');
+        const confirmDeleteBtn = document.getElementById('confirmDeleteBtn');
+
+        // Show confirmation modal on form submit
+        deleteForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            var confirmModal = new bootstrap.Modal(document.getElementById('confirmDeleteModal'));
+            confirmModal.show();
+        });
+
+        // Submit form when confirmed
+        if (confirmDeleteBtn) {
+            confirmDeleteBtn.addEventListener('click', function() {
+                deleteForm.submit();
+            });
+        }
+    });
+</script>
+
+@section Scripts {
+    @if (!hasContracts)
+    {
+        <script>
+            // Additional safety - log delete attempt
+            console.log('Delete page loaded for client: @Model.Name');
+        </script>
+    }
+}

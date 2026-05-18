@@ -1,0 +1,397 @@
+﻿@model Client
+@{
+    ViewData["Title"] = "Edit Client";
+}
+
+<!-- Page Header -->
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h1 class="display-5 fw-bold mb-1" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); -webkit-background-clip: text; background-clip: text; color: transparent;">
+            <i class="bi bi-pencil-square"></i> Edit Client
+        </h1>
+        <p class="text-muted">Update client information and contact details</p>
+    </div>
+    <div>
+        <a asp-action="Details" asp-route-id="@Model.Id" class="btn btn-outline-secondary rounded-pill px-4">
+            <i class="bi bi-arrow-left"></i> Back to Details
+        </a>
+    </div>
+</div>
+
+<div class="row g-4">
+    <!-- Main Form Column -->
+    <div class="col-lg-8">
+        <div class="card-modern">
+            <div class="card-header bg-transparent border-0 p-4 pb-0">
+                <div class="d-flex align-items-center">
+                    <div class="avatar-lg me-3" style="background: linear-gradient(135deg, rgba(240, 147, 251, 0.1) 0%, rgba(245, 87, 108, 0.1) 100%);">
+                        <i class="bi bi-person-badge fs-3" style="color: #f5576c;"></i>
+                    </div>
+                    <div>
+                        <h5 class="fw-bold mb-0">Client Information</h5>
+                        <small class="text-muted">Update the client's basic information and contact details</small>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-body p-4">
+                <form asp-action="Edit" method="post" id="editClientForm">
+                    <input type="hidden" asp-for="Id" />
+                    <input type="hidden" asp-for="CreatedAt" />
+                    <div asp-validation-summary="ModelOnly" class="alert alert-modern alert-danger" role="alert"></div>
+
+                    <!-- Client Name with Icon -->
+                    <div class="mb-4">
+                        <label asp-for="Name" class="form-label fw-semibold mb-2">
+                            <i class="bi bi-building text-primary"></i> Client Name
+                        </label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-transparent border-end-0">
+                                <i class="bi bi-building"></i>
+                            </span>
+                            <input asp-for="Name" class="form-control border-start-0 ps-0" placeholder="Enter company or client name" />
+                        </div>
+                        <span asp-validation-for="Name" class="text-danger small mt-1 d-block"></span>
+                    </div>
+
+                    <!-- Contact Person -->
+                    <div class="mb-4">
+                        <label asp-for="ContactPerson" class="form-label fw-semibold mb-2">
+                            <i class="bi bi-person-badge text-info"></i> Contact Person
+                        </label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-transparent border-end-0">
+                                <i class="bi bi-person"></i>
+                            </span>
+                            <input asp-for="ContactPerson" class="form-control border-start-0 ps-0" placeholder="Full name of primary contact" />
+                        </div>
+                        <span asp-validation-for="ContactPerson" class="text-danger small mt-1 d-block"></span>
+                        <small class="text-muted mt-1 d-block">
+                            <i class="bi bi-info-circle"></i> The main point of contact for this client
+                        </small>
+                    </div>
+
+                    <!-- Contact Details Row -->
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-6">
+                            <label asp-for="Email" class="form-label fw-semibold mb-2">
+                                <i class="bi bi-envelope text-success"></i> Email Address
+                            </label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-transparent border-end-0">
+                                    <i class="bi bi-envelope"></i>
+                                </span>
+                                <input asp-for="Email" class="form-control border-start-0 ps-0" type="email" placeholder="client@company.com" />
+                            </div>
+                            <span asp-validation-for="Email" class="text-danger small mt-1 d-block"></span>
+                        </div>
+                        <div class="col-md-6">
+                            <label asp-for="Phone" class="form-label fw-semibold mb-2">
+                                <i class="bi bi-telephone text-warning"></i> Phone Number
+                            </label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-transparent border-end-0">
+                                    <i class="bi bi-telephone"></i>
+                                </span>
+                                <input asp-for="Phone" class="form-control border-start-0 ps-0" placeholder="+27 XX XXX XXXX" />
+                            </div>
+                            <span asp-validation-for="Phone" class="text-danger small mt-1 d-block"></span>
+                        </div>
+                    </div>
+
+                    <!-- Region Selection with Map Icon -->
+                    <div class="mb-4">
+                        <label asp-for="Region" class="form-label fw-semibold mb-2">
+                            <i class="bi bi-geo-alt text-danger"></i> Region
+                        </label>
+                        <select asp-for="Region" class="form-select region-select">
+                            <option value="">Select a region...</option>
+                            <optgroup label="South Africa">
+                                <option value="Gauteng">🏙️ Gauteng</option>
+                                <option value="Western Cape">🌊 Western Cape</option>
+                                <option value="KwaZulu-Natal">🏖️ KwaZulu-Natal</option>
+                                <option value="Eastern Cape">🌄 Eastern Cape</option>
+                                <option value="Free State">🌾 Free State</option>
+                                <option value="Limpopo">🦁 Limpopo</option>
+                                <option value="Mpumalanga">⛰️ Mpumalanga</option>
+                                <option value="North West">🏜️ North West</option>
+                                <option value="Northern Cape">🌵 Northern Cape</option>
+                            </optgroup>
+                            <optgroup label="International">
+                                <option value="International">🌍 International</option>
+                            </optgroup>
+                        </select>
+                        <span asp-validation-for="Region" class="text-danger small mt-1 d-block"></span>
+                    </div>
+
+                    <!-- Address with Rich Text Editor -->
+                    <div class="mb-4">
+                        <label asp-for="Address" class="form-label fw-semibold mb-2">
+                            <i class="bi bi-geo-alt-fill text-secondary"></i> Physical Address
+                        </label>
+                        <textarea asp-for="Address" class="form-control address-textarea" rows="3"
+                                  placeholder="Street address, city, postal code..."></textarea>
+                        <small class="text-muted mt-1 d-block">
+                            <i class="bi bi-info-circle"></i> Full physical address for deliveries and correspondence
+                        </small>
+                    </div>
+
+                    <!-- Form Actions -->
+                    <div class="d-flex gap-3 mt-4 pt-3 border-top">
+                        <button type="submit" class="btn btn-gradient-warning rounded-pill px-5 py-2">
+                            <i class="bi bi-floppy"></i> Save Changes
+                        </button>
+                        <a asp-action="Details" asp-route-id="@Model.Id" class="btn btn-outline-secondary rounded-pill px-4 py-2">
+                            <i class="bi bi-x-circle"></i> Cancel
+                        </a>
+                        <button type="button" class="btn btn-link text-danger ms-auto" onclick="confirmDelete()">
+                            <i class="bi bi-trash"></i> Delete Client
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sidebar Column - Info & Tips -->
+    <div class="col-lg-4">
+        <!-- Client Stats Card -->
+        <div class="card-modern mb-4">
+            <div class="card-header bg-transparent border-0 p-4 pb-0">
+                <h5 class="fw-bold mb-0">
+                    <i class="bi bi-graph-up text-success"></i> Client Statistics
+                </h5>
+            </div>
+            <div class="card-body p-4">
+                <div class="stat-item mb-3">
+                    <div class="d-flex justify-content-between mb-1">
+                        <small class="text-muted">Client since</small>
+                        <strong>@Model.CreatedAt.ToString("dd MMM yyyy")</strong>
+                    </div>
+                </div>
+                @if (Model.Contracts?.Any() == true)
+                {
+                    <div class="stat-item mb-3">
+                        <div class="d-flex justify-content-between mb-1">
+                            <small class="text-muted">Total Contracts</small>
+                            <strong>@Model.Contracts.Count</strong>
+                        </div>
+                        <div class="progress" style="height: 6px;">
+                            @{
+                                var activeCount = Model.Contracts.Count(c => c.Status == ContractStatus.Active);
+                                var activePercentage = (double)activeCount / Model.Contracts.Count * 100;
+                            }
+                            <div class="progress-bar bg-success" style="width: @activePercentage%"></div>
+                        </div>
+                        <div class="d-flex justify-content-between mt-1">
+                            <small class="text-success">@activeCount Active</small>
+                            <small class="text-muted">@(Model.Contracts.Count - activeCount) Inactive</small>
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    <div class="alert alert-light text-center">
+                        <i class="bi bi-file-earmark-text fs-4"></i>
+                        <p class="mb-0 mt-2">No contracts yet</p>
+                        <a asp-controller="Contracts" asp-action="Create" asp-route-clientId="@Model.Id" class="btn btn-sm btn-primary mt-2">
+                            Create First Contract
+                        </a>
+                    </div>
+                }
+            </div>
+        </div>
+
+        <!-- Help & Tips Card -->
+        <div class="card-modern">
+            <div class="card-header bg-transparent border-0 p-4 pb-0">
+                <h5 class="fw-bold mb-0">
+                    <i class="bi bi-lightbulb text-warning"></i> Quick Tips
+                </h5>
+            </div>
+            <div class="card-body p-4">
+                <div class="tip-item mb-3 pb-2 border-bottom">
+                    <i class="bi bi-check-circle-fill text-success me-2"></i>
+                    <small>Ensure email addresses are valid for system notifications</small>
+                </div>
+                <div class="tip-item mb-3 pb-2 border-bottom">
+                    <i class="bi bi-check-circle-fill text-success me-2"></i>
+                    <small>Select the correct region for accurate service delivery</small>
+                </div>
+                <div class="tip-item">
+                    <i class="bi bi-check-circle-fill text-success me-2"></i>
+                    <small>Keep contact information up to date for communication</small>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 rounded-4">
+            <div class="modal-header border-0 pb-0">
+                <h5 class="modal-title fw-bold">Confirm Deletion</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="text-center mb-3">
+                    <i class="bi bi-exclamation-triangle-fill text-danger fs-1"></i>
+                </div>
+                <p class="text-center mb-0">
+                    Are you sure you want to delete <strong>@Model.Name</strong>?<br />
+                    <small class="text-muted">This action cannot be undone.</small>
+                </p>
+            </div>
+            <div class="modal-footer border-0 pt-0 justify-content-center gap-3">
+                <button type="button" class="btn btn-outline-secondary rounded-pill px-4" data-bs-dismiss="modal">
+                    Cancel
+                </button>
+                <form asp-action="Delete" asp-route-id="@Model.Id" method="post" class="d-inline">
+                    <button type="submit" class="btn btn-danger rounded-pill px-4">
+                        <i class="bi bi-trash"></i> Delete Permanently
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Custom CSS -->
+<style>
+    .card-modern {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        border: none;
+        border-radius: 20px;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.05);
+        transition: all 0.3s ease;
+    }
+
+        .card-modern:hover {
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.1);
+        }
+
+    .avatar-lg {
+        width: 50px;
+        height: 50px;
+        border-radius: 15px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .input-group-text {
+        background: transparent;
+        color: #667eea;
+        transition: all 0.3s ease;
+    }
+
+    .form-control, .form-select {
+        border: 1px solid #e0e0e0;
+        padding: 0.6rem 1rem;
+        transition: all 0.3s ease;
+    }
+
+        .form-control:focus, .form-select:focus {
+            border-color: #f5576c;
+            box-shadow: 0 0 0 0.2rem rgba(245, 87, 108, 0.25);
+        }
+
+    .address-textarea {
+        resize: vertical;
+        min-height: 80px;
+    }
+
+    .btn-gradient-warning {
+        background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        border: none;
+        color: white;
+        transition: all 0.3s ease;
+    }
+
+        .btn-gradient-warning:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(245, 87, 108, 0.3);
+            color: white;
+        }
+
+    .alert-modern {
+        border: none;
+        border-radius: 15px;
+        padding: 1rem;
+        animation: slideDown 0.5s ease-out;
+    }
+
+    @@keyframes slideDown {
+        from
+
+    {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    }
+
+    .region-select optgroup {
+        font-weight: bold;
+        color: #667eea;
+    }
+
+    .tip-item:last-child {
+        border-bottom: none !important;
+        padding-bottom: 0 !important;
+        margin-bottom: 0 !important;
+    }
+
+    /* Responsive adjustments */
+    @@media (max-width: 768px) {
+        .btn-gradient-warning
+
+    {
+        width: 100%;
+    }
+
+    .btn-outline-secondary {
+        width: 100%;
+    }
+
+    .card-body {
+        padding: 1.25rem;
+    }
+
+    }</style>
+
+<!-- JavaScript -->
+<script>
+    function confirmDelete() {
+        var deleteModal = new bootstrap.Modal(document.getElementById('deleteModal'));
+        deleteModal.show();
+    }
+
+    // Auto-format phone number (optional)
+    document.querySelector('input[name="Phone"]')?.addEventListener('input', function(e) {
+        let value = e.target.value.replace(/\D/g, '');
+        if (value.length > 0 && !value.startsWith('27')) {
+            // Allow any format, just clean it
+            e.target.value = value;
+        }
+    });
+
+    // Show validation summary automatically
+    if (document.querySelector('.alert-danger')) {
+        setTimeout(() => {
+            document.querySelector('.alert-danger')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }, 100);
+    }
+</script>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
