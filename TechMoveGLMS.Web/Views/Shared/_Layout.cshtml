@@ -3,402 +3,54 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="TechMove Global Logistics Management System - Streamline your logistics operations" />
-    <meta name="author" content="Phathutshedzo Ramakuela - ST10369372" />
-    <title>@ViewData["Title"] — TechMove GLMS</title>
-
-    <!-- Google Fonts + Modern Icons -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" />
+    <title>@ViewData["Title"] - TechMove GLMS</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" />
-
-    <style>
-        * {
-            font-family: 'Inter', sans-serif;
-        }
-
-        body {
-            background: linear-gradient(135deg, #f5f7fa 0%, #e9edf2 100%);
-            min-height: 100vh;
-        }
-
-        /* Modern Gradient Navbar */
-        .navbar-modern {
-            background: linear-gradient(135deg, #0f2b3d 0%, #1a4a6f 100%);
-            backdrop-filter: blur(10px);
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .navbar-modern .navbar-brand {
-            font-size: 1.5rem;
-            font-weight: 800;
-            letter-spacing: -0.5px;
-            background: linear-gradient(135deg, #fff 0%, #a8d8ff 100%);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent !important;
-        }
-
-        .navbar-modern .nav-link {
-            font-weight: 500;
-            margin: 0 0.25rem;
-            padding: 0.5rem 1rem;
-            border-radius: 10px;
-            transition: all 0.3s ease;
-            color: rgba(255, 255, 255, 0.85) !important;
-        }
-
-        .navbar-modern .nav-link:hover {
-            background: rgba(255, 255, 255, 0.1);
-            color: white !important;
-            transform: translateY(-2px);
-        }
-
-        .navbar-modern .nav-link.active {
-            background: rgba(255, 255, 255, 0.15);
-            color: white !important;
-        }
-
-        /* Card Styles */
-        .card-modern {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            border: none;
-            border-radius: 20px;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.05);
-            transition: all 0.3s ease;
-        }
-
-        .card-modern:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.1);
-        }
-
-        /* Alert Animations */
-        .alert-modern {
-            border: none;
-            border-radius: 15px;
-            padding: 1rem 1.5rem;
-            margin-bottom: 1.5rem;
-            animation: slideDown 0.5s ease-out;
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
-        }
-
-        @@keyframes slideDown {
-            from {
-                opacity: 0;
-                transform: translateY(-20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        /* Glass Button */
-        .btn-glass {
-            background: rgba(255, 255, 255, 0.2);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            border-radius: 12px;
-            padding: 0.6rem 1.2rem;
-            font-weight: 500;
-            transition: all 0.3s ease;
-        }
-
-        .btn-glass:hover {
-            background: rgba(255, 255, 255, 0.3);
-            transform: scale(1.05);
-        }
-
-        /* Stat Cards */
-        .stat-card {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border-radius: 20px;
-            padding: 1.5rem;
-            color: white;
-            transition: all 0.3s ease;
-        }
-
-        .stat-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
-        }
-
-        /* Modern Footer */
-        .footer-modern {
-            background: linear-gradient(135deg, #0f2b3d 0%, #1a4a6f 100%);
-            color: rgba(255, 255, 255, 0.7);
-            border-top: none;
-            margin-top: 4rem;
-            padding: 2rem 0;
-        }
-
-        /* Loading Spinner */
-        .spinner-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.7);
-            backdrop-filter: blur(5px);
-            z-index: 9999;
-            display: none;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .spinner-modern {
-            width: 60px;
-            height: 60px;
-            border: 4px solid rgba(255, 255, 255, 0.3);
-            border-top-color: #fff;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
-
-        @@keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
-        /* Table Styles */
-        .table-modern {
-            background: white;
-            border-radius: 15px;
-            overflow: hidden;
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
-        }
-
-        .table-modern thead {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-        }
-
-        .table-modern tbody tr:hover {
-            background: rgba(102, 126, 234, 0.05);
-            transition: all 0.3s ease;
-        }
-
-        /* Sidebar (Optional for advanced layouts) */
-        .sidebar {
-            background: white;
-            border-radius: 20px;
-            padding: 1.5rem;
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
-        }
-
-        .sidebar-item {
-            padding: 0.75rem 1rem;
-            margin: 0.25rem 0;
-            border-radius: 12px;
-            transition: all 0.3s ease;
-            cursor: pointer;
-        }
-
-        .sidebar-item:hover {
-            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
-            transform: translateX(5px);
-        }
-
-        /* Scrollbar Customization */
-        ::-webkit-scrollbar {
-            width: 8px;
-            height: 8px;
-        }
-
-        ::-webkit-scrollbar-track {
-            background: #f1f1f1;
-            border-radius: 10px;
-        }
-
-        ::-webkit-scrollbar-thumb {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border-radius: 10px;
-        }
-
-        ::-webkit-scrollbar-thumb:hover {
-            background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
-        }
-
-        /* Responsive Adjustments */
-        @@media (max-width: 768px) {
-            .navbar-modern .navbar-brand {
-                font-size: 1.2rem;
-            }
-
-            .stat-card {
-                margin-bottom: 1rem;
-            }
-        }
-    </style>
-
     <link rel="stylesheet" href="~/css/site.css" />
 </head>
 <body>
+    <div id="loadingSpinner" class="spinner-overlay"><div class="spinner-modern"></div></div>
 
-    <!-- Loading Spinner -->
-    <div id="loadingSpinner" class="spinner-overlay">
-        <div class="spinner-modern"></div>
-    </div>
-
-    <!-- Modern Navbar -->
     <nav class="navbar navbar-expand-lg navbar-modern sticky-top">
         <div class="container-fluid px-4">
-            <a class="navbar-brand fw-bold" href="/">
-                <i class="bi bi-box-seam"></i> TechMove GLMS
-            </a>
-            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu">
+            <a class="navbar-brand" href="/"><i class="bi bi-box-seam"></i> TechMove GLMS</a>
+            <button class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navMenu">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navMenu">
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                    <li class="nav-item">
-                        <a class="nav-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Home" ? "active" : "")"
-                           asp-controller="Home" asp-action="Index">
-                            <i class="bi bi-speedometer2"></i> Dashboard
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Clients" ? "active" : "")"
-                           asp-controller="Clients" asp-action="Index">
-                            <i class="bi bi-people"></i> Clients
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Contracts" ? "active" : "")"
-                           asp-controller="Contracts" asp-action="Index">
-                            <i class="bi bi-file-earmark-text"></i> Contracts
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "ServiceRequests" ? "active" : "")"
-                           asp-controller="ServiceRequests" asp-action="Index">
-                            <i class="bi bi-list-check"></i> Service Requests
-                        </a>
-                    </li>
-                </ul>
-
-                <!-- User Area -->
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown">
-                            <i class="bi bi-person-circle"></i>
-                            <span class="d-none d-lg-inline">User Name</span>
-                        </a>
-                        <ul class="dropdown-menu dropdown-menu-end border-0 shadow-lg rounded-3">
-                            <li><a class="dropdown-item" href="#"><i class="bi bi-person"></i> Profile</a></li>
-                            <li><a class="dropdown-item" href="#"><i class="bi bi-gear"></i> Settings</a></li>
-                            <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item text-danger" href="#"><i class="bi bi-box-arrow-right"></i> Logout</a></li>
-                        </ul>
-                    </li>
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item"><a class="nav-link" asp-controller="Home" asp-action="Index"><i class="bi bi-speedometer2"></i> Dashboard</a></li>
+                    <li class="nav-item"><a class="nav-link" asp-controller="Clients" asp-action="Index"><i class="bi bi-people"></i> Clients</a></li>
+                    <li class="nav-item"><a class="nav-link" asp-controller="Contracts" asp-action="Index"><i class="bi bi-file-earmark-text"></i> Contracts</a></li>
+                    <li class="nav-item"><a class="nav-link" asp-controller="ServiceRequests" asp-action="Index"><i class="bi bi-list-check"></i> Service Requests</a></li>
                 </ul>
             </div>
         </div>
     </nav>
 
-    <!-- Main Content -->
     <div class="container-fluid px-4 py-4">
-        <!-- Alert Messages -->
         @if (TempData["Success"] != null)
         {
-            <div class="alert alert-success alert-modern alert-dismissible fade show" role="alert">
-                <i class="bi bi-check-circle-fill me-2"></i> @TempData["Success"]
-                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-            </div>
+            <div class="alert alert-success alert-modern alert-dismissible fade show"><i class="bi bi-check-circle-fill"></i> @TempData["Success"]<button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>
         }
         @if (TempData["Error"] != null)
         {
-            <div class="alert alert-danger alert-modern alert-dismissible fade show" role="alert">
-                <i class="bi bi-exclamation-triangle-fill me-2"></i> @TempData["Error"]
-                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-            </div>
+            <div class="alert alert-danger alert-modern alert-dismissible fade show"><i class="bi bi-exclamation-triangle-fill"></i> @TempData["Error"]<button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>
         }
-        @if (TempData["Warning"] != null)
-        {
-            <div class="alert alert-warning alert-modern alert-dismissible fade show" role="alert">
-                <i class="bi bi-exclamation-diamond-fill me-2"></i> @TempData["Warning"]
-                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-            </div>
-        }
-        @if (TempData["Info"] != null)
-        {
-            <div class="alert alert-info alert-modern alert-dismissible fade show" role="alert">
-                <i class="bi bi-info-circle-fill me-2"></i> @TempData["Info"]
-                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-            </div>
-        }
-
-        <!-- Breadcrumb Navigation -->
-        <nav aria-label="breadcrumb" class="mb-4">
-            <ol class="breadcrumb bg-transparent p-0">
-                <li class="breadcrumb-item"><a href="/" class="text-decoration-none">Home</a></li>
-                @if (ViewContext.RouteData.Values["Controller"]?.ToString() != "Home")
-                {
-                    <li class="breadcrumb-item active" aria-current="page">
-                        @ViewContext.RouteData.Values["Controller"]
-                    </li>
-                }
-            </ol>
-        </nav>
-
-        <!-- Page Content -->
         @RenderBody()
     </div>
 
-    <!-- Modern Footer -->
-    <footer class="footer-modern">
-        <div class="container-fluid px-4">
-            <div class="row align-items-center">
-                <div class="col-md-6 text-center text-md-start">
-                    <i class="bi bi-truck"></i>
-                    <strong>TechMove Global Logistics Management System</strong>
-                    <div class="mt-2">
-                        <small>&copy; 2026 | ST10369372 – Phathutshedzo Ramakuela</small>
-                    </div>
-                </div>
-                <div class="col-md-6 text-center text-md-end mt-3 mt-md-0">
-                    <a href="#" class="text-white-50 text-decoration-none me-3">
-                        <i class="bi bi-envelope"></i> Support
-                    </a>
-                    <a href="#" class="text-white-50 text-decoration-none me-3">
-                        <i class="bi bi-question-circle"></i> Help
-                    </a>
-                    <a href="#" class="text-white-50 text-decoration-none">
-                        <i class="bi bi-shield-check"></i> Privacy
-                    </a>
-                </div>
-            </div>
-        </div>
+    <footer class="footer-modern mt-5 py-3 text-center">
+        <small>&copy; 2026 TechMove GLMS | ST10369372</small>
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
-    <!-- Loading Spinner Script -->
     <script>
-        // Show spinner on form submits and AJAX requests
-        document.addEventListener('submit', function(e) {
-            if (e.target.tagName === 'FORM') {
-                document.getElementById('loadingSpinner').style.display = 'flex';
-            }
-        });
-
-        // Hide spinner on page load complete
-        window.addEventListener('load', function() {
-            document.getElementById('loadingSpinner').style.display = 'none';
-        });
-
-        // Auto-dismiss alerts after 5 seconds
-        document.querySelectorAll('.alert').forEach(alert => {
-            setTimeout(() => {
-                alert.classList.add('fade');
-                setTimeout(() => alert.remove(), 500);
-            }, 5000);
-        });
+        document.addEventListener('submit', function(e) { if (e.target.tagName === 'FORM') document.getElementById('loadingSpinner').style.display = 'flex'; });
+        window.addEventListener('load', function() { document.getElementById('loadingSpinner').style.display = 'none'; });
+        setTimeout(() => document.querySelectorAll('.alert').forEach(a => a.classList.add('fade')), 5000);
     </script>
-
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

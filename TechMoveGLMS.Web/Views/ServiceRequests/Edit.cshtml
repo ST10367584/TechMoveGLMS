@@ -2,64 +2,30 @@
 @{
     ViewData["Title"] = $"Edit Service Request #{Model.Id}";
 }
-
-<h2><i class="bi bi-pencil-square text-warning"></i> Edit Service Request #@Model.Id</h2>
-<hr />
-
-<div class="row">
-    <div class="col-md-7">
-        <form asp-action="Edit" asp-route-id="@Model.Id" method="post">
-            <input type="hidden" asp-for="Id" />
-            <input type="hidden" asp-for="ContractId" />
-            <input type="hidden" asp-for="CreatedAt" />
-            <input type="hidden" asp-for="ExchangeRateUsed" />
-
-            <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
-
-            <div class="mb-3">
-                <label asp-for="Description" class="form-label fw-semibold"></label>
-                <textarea asp-for="Description" class="form-control" rows="4"></textarea>
-                <span asp-validation-for="Description" class="text-danger small"></span>
-            </div>
-
-            <div class="mb-3">
-                <label asp-for="CostUSD" class="form-label fw-semibold">Cost (USD $)</label>
-                <div class="input-group">
-                    <span class="input-group-text">$</span>
-                    <input asp-for="CostUSD" class="form-control" type="number" step="0.01" />
-                </div>
-                <div class="form-text text-muted">
-                    Changing the USD amount will recalculate ZAR at the current rate.
-                </div>
-                <span asp-validation-for="CostUSD" class="text-danger small"></span>
-            </div>
-
-            <div class="mb-3">
-                <label class="form-label fw-semibold">Current ZAR (R)</label>
-                <div class="input-group">
-                    <span class="input-group-text">R</span>
-                    <input value="@Model.CostZAR.ToString("N2")" class="form-control" readonly />
-                </div>
-                <small class="text-muted">Rate saved: @Model.ExchangeRateUsed.ToString("N4")</small>
-            </div>
-
-            <div class="mb-3">
-                <label asp-for="Status" class="form-label fw-semibold"></label>
-                <select asp-for="Status" class="form-select"
-                        asp-items="Html.GetEnumSelectList<ServiceRequestStatus>()"></select>
-            </div>
-
-            <div class="d-flex gap-2">
-                <button type="submit" class="btn btn-warning">
-                    <i class="bi bi-floppy"></i> Update Request
-                </button>
-                <a asp-controller="Contracts" asp-action="Details" asp-route-id="@Model.ContractId"
-                   class="btn btn-outline-secondary">Cancel</a>
-            </div>
-        </form>
-    </div>
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h2><i class="bi bi-pencil-square text-warning"></i> Edit Request #@Model.Id</h2>
+    <a asp-controller="Contracts" asp-action="Details" asp-route-id="@Model.ContractId" class="btn btn-outline-secondary">Back to Contract</a>
 </div>
-
+<div class="card-modern p-4">
+    <form asp-action="Edit" method="post">
+        <input type="hidden" asp-for="Id" /><input type="hidden" asp-for="ContractId" /><input type="hidden" asp-for="CreatedAt" /><input type="hidden" asp-for="ExchangeRateUsed" />
+        <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+        <div class="mb-3"><label asp-for="Description" class="form-label"></label><textarea asp-for="Description" class="form-control" rows="3"></textarea><span asp-validation-for="Description" class="text-danger"></span></div>
+        <div class="mb-3"><label asp-for="CostUSD" class="form-label">Cost (USD $)</label><input asp-for="CostUSD" class="form-control" id="costUSD" step="0.01" /><div class="form-text">Changing USD will recalculate ZAR at current rate.</div></div>
+        <div class="mb-3"><label class="form-label">ZAR (R)</label><input id="costZAR" class="form-control" readonly value="@Model.CostZAR.ToString("N2")" /><input type="hidden" asp-for="CostZAR" id="hiddenCostZAR" /><small class="text-muted">Rate saved: @Model.ExchangeRateUsed.ToString("N4")</small></div>
+        <div class="mb-3"><label asp-for="Status" class="form-label"></label><select asp-for="Status" class="form-select" asp-items="Html.GetEnumSelectList<ServiceRequestStatus>()"></select></div>
+        <button type="submit" class="btn btn-warning"><i class="bi bi-floppy"></i> Save Changes</button>
+        <a asp-controller="Contracts" asp-action="Details" asp-route-id="@Model.ContractId" class="btn btn-outline-secondary">Cancel</a>
+    </form>
+</div>
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
+    <script>
+        const rateEndpoint = '/ServiceRequests/GetRate';
+        let currentRate = @Model.ExchangeRateUsed;
+        async function fetchRate() { try { const resp = await fetch(rateEndpoint); const data = await resp.json(); currentRate = data.rate; } catch(e) { console.warn('Using saved rate'); } }
+        function recalc() { let usd = parseFloat(document.getElementById('costUSD').value) || 0; let zar = (usd * currentRate).toFixed(2); document.getElementById('costZAR').value = zar; document.getElementById('hiddenCostZAR').value = zar; }
+        document.getElementById('costUSD').addEventListener('input', recalc);
+        fetchRate();
+    </script>
 }

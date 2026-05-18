@@ -1,66 +1,51 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace TechMoveGLMS.Web.Models
+namespace TechMoveGLMS.Web.Models;
+
+public enum ContractStatus { Draft, Active, Expired, OnHold }
+public enum ServiceLevel { Basic, Standard, Premium, Enterprise }
+
+public class Contract
 {
-    public enum ContractStatus
-    {
-        Draft,
-        Active,
-        Expired,
-        OnHold
-    }
+    public int Id { get; set; }
 
-    public enum ServiceLevel
-    {
-        Basic,
-        Standard,
-        Premium,
-        Enterprise
-    }
+    [Required]
+    [Display(Name = "Client")]
+    public int ClientId { get; set; }
 
-    public class Contract
-    {
-        public int Id { get; set; }
+    [Required(ErrorMessage = "Start date is required.")]
+    [DataType(DataType.Date)]
+    [Display(Name = "Start Date")]
+    public DateTime StartDate { get; set; }
 
-        [Required]
-        [Display(Name = "Client")]
-        public int ClientId { get; set; }
+    [Required(ErrorMessage = "End date is required.")]
+    [DataType(DataType.Date)]
+    [Display(Name = "End Date")]
+    public DateTime EndDate { get; set; }
 
-        [Required(ErrorMessage = "Start date is required.")]
-        [DataType(DataType.Date)]
-        [Display(Name = "Start Date")]
-        public DateTime StartDate { get; set; }
+    [Required]
+    [Display(Name = "Status")]
+    public ContractStatus Status { get; set; } = ContractStatus.Draft;
 
-        [Required(ErrorMessage = "End date is required.")]
-        [DataType(DataType.Date)]
-        [Display(Name = "End Date")]
-        public DateTime EndDate { get; set; }
+    [Required]
+    [Display(Name = "Service Level")]
+    public ServiceLevel ServiceLevel { get; set; } = ServiceLevel.Standard;
 
-        [Required]
-        [Display(Name = "Status")]
-        public ContractStatus Status { get; set; } = ContractStatus.Draft;
+    [StringLength(500)]
+    [Display(Name = "Notes")]
+    public string? Notes { get; set; }
 
-        [Required]
-        [Display(Name = "Service Level")]
-        public ServiceLevel ServiceLevel { get; set; } = ServiceLevel.Standard;
+    [Display(Name = "Signed Agreement (PDF)")]
+    public string? SignedAgreementPath { get; set; }
 
-        [StringLength(500)]
-        [Display(Name = "Notes")]
-        public string? Notes { get; set; }
+    [Display(Name = "Original File Name")]
+    public string? SignedAgreementFileName { get; set; }
 
-        // PDF Signed Agreement
-        [Display(Name = "Signed Agreement (PDF)")]
-        public string? SignedAgreementPath { get; set; }
+    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+    public DateTime? UpdatedAt { get; set; }
 
-        [Display(Name = "Original File Name")]
-        public string? SignedAgreementFileName { get; set; }
-
-        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-        public DateTime? UpdatedAt { get; set; }
-
-        // Navigation
-        public Client? Client { get; set; }
-        public ICollection<ServiceRequest> ServiceRequests { get; set; } = new List<ServiceRequest>();
-    }
+    // Navigation
+    public Client? Client { get; set; }
+    public ICollection<ServiceRequest> ServiceRequests { get; set; } = new List<ServiceRequest>();
 }

@@ -1,19 +1,19 @@
 @model ServiceRequest
-@{ ViewData["Title"] = "Delete Service Request"; }
-
-<h2 class="text-danger"><i class="bi bi-trash"></i> Delete Service Request #@Model.Id</h2>
-<p class="text-muted">This action cannot be undone.</p>
-<hr />
-
-<dl class="row">
-    <dt class="col-sm-4">Contract</dt><dd class="col-sm-8">#@Model.ContractId — @Model.Contract?.Client?.Name</dd>
-    <dt class="col-sm-4">Description</dt><dd class="col-sm-8">@Model.Description</dd>
-    <dt class="col-sm-4">Cost (USD)</dt><dd class="col-sm-8">$@Model.CostUSD.ToString("N2")</dd>
-    <dt class="col-sm-4">Cost (ZAR)</dt><dd class="col-sm-8">R @Model.CostZAR.ToString("N2")</dd>
-    <dt class="col-sm-4">Status</dt><dd class="col-sm-8">@Model.Status</dd>
-</dl>
-
-<form asp-action="Delete" method="post">
-    <button type="submit" class="btn btn-danger"><i class="bi bi-trash"></i> Yes, Delete</button>
-    <a asp-controller="Contracts" asp-action="Details" asp-route-id="@Model.ContractId" class="btn btn-secondary">Cancel</a>
-</form>
+@{
+    ViewData["Title"] = "Delete Service Request";
+}
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h2 class="text-danger"><i class="bi bi-trash"></i> Delete Request #@Model.Id</h2>
+    <a asp-controller="Contracts" asp-action="Details" asp-route-id="@Model.ContractId" class="btn btn-outline-secondary">Back</a>
+</div>
+<div class="card-modern p-4 text-center">
+    <i class="bi bi-exclamation-triangle-fill text-danger display-1"></i>
+    <h3 class="mt-3">Delete this service request?</h3>
+    <p class="text-muted">This action cannot be undone.</p>
+    <dl class="row justify-content-center"><dt class="col-sm-4">Description</dt><dd class="col-sm-8">@Model.Description</dd><dt class="col-sm-4">Cost</dt><dd class="col-sm-8">$@Model.CostUSD.ToString("N2") = R @Model.CostZAR.ToString("N2")</dd></dl>
+    <form asp-action="Delete" method="post">
+        @Html.AntiForgeryToken()
+        <button type="submit" class="btn btn-danger rounded-pill px-4"><i class="bi bi-trash"></i> Yes, Delete</button>
+        <a asp-controller="Contracts" asp-action="Details" asp-route-id="@Model.ContractId" class="btn btn-outline-secondary rounded-pill px-4">Cancel</a>
+    </form>
+</div>
